@@ -30,12 +30,12 @@ my @seqNames = ();
 my @aaSeqs = ();
 my $thisSeq = "";
 my $total = 0;
-my $currDir = `pwd`;
+my $currDir = shift;;
 chop $currDir;
 $currDir .= '/';
 
 
-my $signalP = $currDir.'signalp-2.0/signalp';
+my $signalP = $currDir.'signalp';
 
 my $fastaFile = "";
 
@@ -46,8 +46,7 @@ my $fastaFile = "";
 	# amino acid sequences
 	#
 print "\n";
-print "Please enter the name of fasta protein file: ";
-$fastaFile = <STDIN>;
+$fastaFile = shift;;
 chomp $fastaFile;
 unless ( open ( FASTAFILE, "$fastaFile" ) ) {
     print "Cannot open file \"$fastaFile\"\n";
@@ -152,8 +151,7 @@ for (@seqFileNames) {
     my $options = "-t euk -f summary -trunc 70 $seqDir/$_ > $seqDir/$_".".out\n" ;
     print "$signalP $options $_\n";
     my $whatever = `$signalP $options`;
-
-}
+ }
    
 #-------------------------------------------------------------------------
 

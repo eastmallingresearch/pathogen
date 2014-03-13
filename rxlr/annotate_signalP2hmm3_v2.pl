@@ -25,35 +25,35 @@ use warnings;
 
 # Asks for a file containing the signalP results
 #
-print "\nPlease enter the file containing the signalP result: ";
-my $signalpResultFile = <STDIN>;
+#print "\nPlease enter the file containing the signalP result: ";
+my $signalpResultFile = shift;
 chomp $signalpResultFile;
-unless (-e $signalpResultFile) {die "Can't open $signalpResultFile: $!"}
+#unless (-e $signalpResultFile) {die "Can't open $signalpResultFile: $!"}
 
 # Asks for the output file name to store signalP positives.
 #
-print "Please enter the file name for signalP output in tabular form: ";
-my $outFile = <STDIN>;
+#print "Please enter the file name for signalP output in tabular form: ";
+my $outFile = shift;
 chomp $outFile;
 
 # Asks for the output file name to store signalP positives.
 #
-print "Please enter the file name for signalP positives: ";
-my $outFile2 = <STDIN>;
+#print "Please enter the file name for signalP positives: ";
+my $outFile2 = shift;
 chomp $outFile2;
 
 # Asks for the output file name to store signalP negatives.
 #
-print "Please enter the file name for signalP negatives: ";
-my $outFile3 = <STDIN>;
+#print "Please enter the file name for signalP negatives: ";
+my $outFile3 = shift;
 chomp $outFile3;
 
 
 # Asks for the fasta file containing the sequences.
-print "Please enter the fasta file to annotate: ";
-my $fasta = <STDIN>;
-chomp $fasta;
-unless (-e $fasta) {die "Can't open $fasta: $!"}
+#print "Please enter the fasta file to annotate: ";
+my $fasta = shift;
+#chomp $fasta;
+#unless (-e $fasta) {die "Can't open $fasta: $!"}
 
 open(INPUT, $signalpResultFile) || die "Can't open $signalpResultFile: $!";
 my @results;
@@ -61,13 +61,17 @@ my $theseLines = "";
 my $total = 0;
 while (<INPUT>) {
     $theseLines .= $_;
-    if (/^-{70}/) {
-        $total++;
-        push (@results, $theseLines);
+    #print $theseLines;
+    if (/NODE/) {
+       # print "HERE";
+	$total++;
+        push (@results, $_);
         $theseLines = "";
     }
 }
 close (INPUT);
+#print @results;
+#exit;
 
 my $header = "";
 my $seqCount = 0;
@@ -77,16 +81,21 @@ my $unique_ID = 0;
 my $inSequence = 0;
 open (FASTA, "$fasta") || die "Can't open $fasta: $!";
 while (<FASTA>) {
-    chomp;
+#print $_;    
+chomp;
     if (/^>/) {
         if ($inSequence) {
 	    # stops collecting the sequence lines and store
 	    # the sequence in a hash with the unique ID in its header line
 	    # as its key.
 	    	$unique_ID = $header;
-	    	$unique_ID =~ s/\|/_/g;
-	    	($unique_ID) = split (" ", $unique_ID);
-	    	#print "$unique_ID\n";
+	    	#$unique_ID =~ s/\|/_/g;
+	    	#($unique_ID) = split (" ", $unique_ID);
+		$unique_ID =~/(__.\d{1,}__)/;
+        	##print $1."\n";
+        	$unique_ID = $1;
+        	$unique_ID =~s/_//g;
+		#print "$unique_ID\n";
 	    	$seq = $header."\n".$seq."\n";
 	    	if (exists $sequences{$unique_ID}) {
 	    		print "********** This $unique_ID sequence is duplicated **********\n";
@@ -109,8 +118,13 @@ while (<FASTA>) {
 }
 # capture the last sequence entry...
 $unique_ID = $header;
-$unique_ID =~ s/\|/_/g;
-($unique_ID) = split (" ", $unique_ID);
+$unique_ID =~/(__.\d{1,}__)/;
+        ##print $1."\n";
+        $unique_ID = $1;
+        $unique_ID =~s/_//g;
+#$unique_ID = $header;
+#$unique_ID =~ s/\|/_/g;
+#($unique_ID) = split (" ", $unique_ID);
 #print "$unique_ID\n";
 $seq = $header."\n".$seq."\n";
 $sequences{$unique_ID} = $seq;
@@ -129,30 +143,50 @@ $unique_ID = "";
 $seq = "";
 
 for (@results) {
+    #print $_."\n";
     $thisResult = $_;
-    $thisResult =~ /(>.*)\n\n/gm;
+    $thisResult =~/(^.*?\s)/;
     $thisName = "$1";
+    $thisName =~s/Name\=//;
+    #print $thisName;
+    #exit;
     $unique_ID = $thisName;
-	$unique_ID =~ s/\|/_/g;
-	($unique_ID) = split (" ", $unique_ID);
-    #    print "$unique_ID\n";
-    #    print "*********************$thisResult\n" if (!($unique_ID =~ />/));
-    if ($thisResult =~ /\# Most likely cleavage site between pos. (\d\d)/) {
+	$unique_ID =~/(__.\d{1,}__)/;
+	##print $1."\n";
+	$unique_ID = $1;
+        $unique_ID =~s/_//g;
+	#$unique_ID=">".$unique_ID;
+	#print "$unique_ID\n";
+#exit;   
+
+###CLEAVAGE SITE
+#    print "*********************$thisResult\n" if (!($unique_ID =~ />/));
+    if ($thisResult =~ /Cleavage site between pos. (\d\d)/) {
         $cleaveSite = $1;
     #} elsif ($thisResult =~ /Max cleavage site probability: \d+.\d+ between pos. (\d+)/) {
     #    $cleaveSite = $1;
     } else {
     	$cleaveSite = 41;
     }
-    my $signalPeptide = ($thisResult =~ /Prediction: Signal peptide/);
-    $thisResult =~ /Signal peptide probability: (\d\.\d\d\d)/;
-    $probability = "$1";
-    if (($signalPeptide) && ($cleaveSite < 41) && ($cleaveSite > 9) && ($probability >= 0.9)) {
-    	if (exists $sequences{$unique_ID}) {
+#exit;
+#D VALUE
+    my $Cutoff = ($thisResult =~ /D\=(\d{1}\.\d{3})/);
+    $probability = "$1\n";
+    #print $probability;
+    chomp $probability;
+
+
+#PUT TOGETHER
+
+    if ( ($cleaveSite < 41) && ($cleaveSite > 9) && ($probability >= 0.5)) {
+    	print "POSITIVE\n";
+        	#print keys(%sequences);		
+		if (exists $sequences{$unique_ID}) {
     		$seq = $sequences{$unique_ID}; 
     		$seq =~ s/^(>.*?)\n/$1 --HMM score = $probability --Signal peptide length = $cleaveSite\n/gm;
-        	push (@signalPeptides, $seq);        	
-        }
+        	
+	push (@signalPeptides, $seq);        	
+       }
         $thisName .= "\tYES\t$probability\t$cleaveSite\n";
         push (@toPrint, $thisName);
     } else {
@@ -161,7 +195,7 @@ for (@results) {
         if (exists $sequences{$unique_ID}) {
     		$seq = $sequences{$unique_ID}; 
         	push (@noPex, $seq);        	
-        }
+          }
         
     }           
 }
