@@ -12,6 +12,7 @@ echo "Predicting coding seqs- reverse"
 echo "Signal P- this can be parallelised"
 #~/scripts/rxlr/run_signalP3.pl ~/signalp-2.0/ aa_cat.fa
 ~/scripts/rxlr/parallel_signalp.sh 
+rm -f submit_*
 cd fasta_seqs
 cat *.faa.out >all.out
 cd ..
