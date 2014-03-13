@@ -100,7 +100,7 @@ close FASTAFILE;
 	# writes out individual fasta files containing 500 sequences each
 	# into a directory (in this case ./fasta_seqs/).
 	# 
-my $seqDir = $currDir."fasta_seqs";
+my $seqDir = "fasta_seqs";
 my $ok = `mkdir $seqDir`;
 $total = @sequences;
 print "There are $total sequences in the file\n";
