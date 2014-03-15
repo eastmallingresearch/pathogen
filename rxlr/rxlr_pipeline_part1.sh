@@ -1,14 +1,18 @@
 #!/bin/bash
 INPUT=$1
+SCRIPT_DIR=$(readlink -f ${0%/*})
+SP_DIR=$2
 
-echo "RxLR pipeline- input your sorted contigs as your first file"
+echo $SCRIPT_DIR
+
+echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-#~/scripts/rxlr/print_atg_50FaN2.pl $INPUT >atg.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl $INPUT F >atg.fa
 echo "REVCOMPing the contigs"
-#~/scripts/rxlr/revcomp_fasta.pl $INPUT >contigs_R.fa 
+$SCRIPT_DIR/revcomp_fasta.pl $INPUT >contigs_R.fa 
 echo "Predicting coding seqs- reverse"
-#~/scripts/rxlr/print_atg_50FaN2.pl contigs_R.fa >atg_R.fa
-#cat atg.fa atg_R.fa>aa_cat.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R >atg_R.fa
+echo "Joining Forward and Reverse Files"
+cat atg.fa atg_R.fa>aa_cat.fa
 echo "Signal P- this is now  parallelised"
-#~/scripts/rxlr/parallel_signalp.sh 
-
+$SCRIPT_DIR/parallel_signalp.sh $SP_DIR

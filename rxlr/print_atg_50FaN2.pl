@@ -44,8 +44,10 @@ my $seqComplete = 0;
 my $totalSeqCount = 0;
 my $tempSeq = "";
 my @sequences;
-
-while (<>) {
+my $input=shift;
+my $direction = shift;
+open(INP, $input);
+while (<INP>) {
     chomp;
     $thisLine = $_;
     if ($thisLine =~ /^>/) {
@@ -68,7 +70,7 @@ while (<>) {
     if ($seqComplete) {
         $tempSeq =~ /^(>.*)\n/;
 		my $header = $1;
-		print_atg_50 ($header,$tempSeq, 1);
+		print_atg_50 ($header,$tempSeq, 1, $direction);
         $tempSeq = "$thisLine";
         $seqComplete = 0;
         $inSequence = 0;
@@ -88,7 +90,7 @@ exit;
 #--------------------------------------------------------------------------
 
 sub print_atg_50 {
-	my ($this_header, $thisSeq, $frame) = @_;
+	my ($this_header, $thisSeq, $frame, $direction) = @_;
 	$thisSeq =~ s/>.*?\n//;
 	$thisSeq =~ tr/[actg]/[ACTG]/;
 	while ($thisSeq =~ /[ATCG]*?(ATG\w+?$)/) {
@@ -99,7 +101,7 @@ sub print_atg_50 {
 		}
 		my $peptide = translate_from_atg($this_frame);
 		if (length($peptide) >= 50) {
-			print "$this_header","__F","$frame","__\n";
+			print "$this_header","_","$direction","$frame","\n";
 			print "$peptide\n";
 			$thisSeq = substr($this_frame, 3);
 			$frame++;
