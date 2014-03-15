@@ -6,4 +6,12 @@ jobs are done.
 Furthermore, there are probably other tweaks that need to be carried out in order to streamline the 
 pipeline. 
 
+TO RUN THIS PIPELINE YOU NEED TO 
+
+1. Have your input file which is the sorted_contigs.fa file from your assembly (or equivalent)
+2. run the rxlr_pipeline_part1.sh file in the github scripts/rxlr repo (current location)
+3. When the cluster job has completed, run the rxlr_pipeline_part2.sh which will then process the signalp output and find rxlr's
+
+
+
 
