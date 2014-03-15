@@ -15,12 +15,12 @@ my $total = 0;
 
 # reads a fasta file containing one or more aa sequences.
 #
-print "\n\*\* Please enter the name of fasta protein file: ";
+#print "\n\*\* Please enter the name of fasta protein file: ";
 my $fastaFile = shift;
 chomp $fastaFile;
 
 
-print "\n\*\* Please enter a name of file to store results: ";
+#print "\n\*\* Please enter a name of file to store results: ";
 my $outFile = shift;
 chomp $outFile;
 
