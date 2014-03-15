@@ -14,5 +14,9 @@ echo "Predicting coding seqs- reverse"
 $SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R >atg_R.fa
 echo "Joining Forward and Reverse Files"
 cat atg.fa atg_R.fa>aa_cat.fa
+echo "Cleaning up any old files"
+rm -rf ./fasta_seq
+echo "Outputting batch FASTA files for Signal P"
+$SCRIPT_DIR/run_signalP3.pl aa_cat.fa
 echo "Signal P- this is now  parallelised"
 $SCRIPT_DIR/parallel_signalp.sh $SP_DIR

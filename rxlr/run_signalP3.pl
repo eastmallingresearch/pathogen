@@ -30,12 +30,12 @@ my @seqNames = ();
 my @aaSeqs = ();
 my $thisSeq = "";
 my $total = 0;
-my $currDir = shift;;
-chop $currDir;
-$currDir .= '/';
+#my $currDir = shift;;
+#chop $currDir;
+#$currDir .= '/';
 
 
-my $signalP = $currDir.'signalp';
+#my $signalP = $currDir.'signalp';
 
 my $fastaFile = "";
 
@@ -45,7 +45,7 @@ my $fastaFile = "";
 	# Asks for a fasta input file containing 
 	# amino acid sequences
 	#
-print "\n";
+#print "\n";
 $fastaFile = shift;;
 chomp $fastaFile;
 unless ( open ( FASTAFILE, "$fastaFile" ) ) {
@@ -60,7 +60,7 @@ my $seqComplete = 0;
 my $totalSeqCount = 0;
 my $tempSeq = "";
 my @sequences;
-
+print "OPENED $fastaFile \n";
 while (<FASTAFILE>) {
     chomp;
     $line = $_;
@@ -141,17 +141,17 @@ if (($seqCount < 500) && ($seqCount != 0)) {
 	# signalP stdout is redirected to a file 
 	#
 
-opendir(DIR,$seqDir);
-my @seqFileNames = readdir(DIR);
+#opendir(DIR,$seqDir);
+#my @seqFileNames = readdir(DIR);
 
-closedir(DIR);
-for (@seqFileNames) {
-    next if ($_ eq "." || $_ eq "..");
-    print "$_\n";
-    my $options = "-t euk -f summary -trunc 70 $seqDir/$_ > $seqDir/$_".".out\n" ;
-    print "$signalP $options $_\n";
-    my $whatever = `$signalP $options`;
- }
+#closedir(DIR);
+#for (@seqFileNames) {
+#    next if ($_ eq "." || $_ eq "..");
+#    print "$_\n";
+#    my $options = "-t euk -f summary -trunc 70 $seqDir/$_ > $seqDir/$_".".out\n" ;
+#    print "$signalP $options $_\n";
+#    my $whatever = `$signalP $options`;
+# }
    
 #-------------------------------------------------------------------------
 
