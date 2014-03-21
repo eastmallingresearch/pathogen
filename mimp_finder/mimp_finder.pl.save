@@ -1,0 +1,103 @@
+#!/usr/bin/perl -w
+#
+use strict;
+use warnings;
+#
+#
+#-------------------------------------------------------------------------
+# find_rxlr.pl
+#
+my $seqName = "";
+my @seqNames = ();
+my $dnaSeq = "";
+my @dnaSeqs = ();
+my $total = 0;
+my $tempSeq=();
+my $thisLine=();
+my $inSequence = 0;
+my $seqComplete = 0;
+
+# reads a fasta file containing one or more DNA sequences.;
+my $fastaFile = shift;
+chomp $fastaFile;
+
+#print "\n\*\* Please enter a name of file to store results: ";
+my $outFile = shift;
+chomp $outFile;
+
+open (FASTA_FILE, "$fastaFile") || die "Cannot open file \"$fastaFile\"\n\n";
+
+my $flag=0;
+
+while (<FASTA_FILE>) {
+        # collect sequences in two parallel arrays:
+        # one for names and one for aa sequences.
+    	    chomp;
+    	$thisLine = $_;
+    	
+	if ($thisLine =~ /^>/ && $flag==0) {
+		print "START LINE DETECTED $thisLine \n";
+		$thisLine .= "\n";	
+		push (@seqNames, $thisLine);
+        		if ($tempSeq){
+				print "Pushing DNA seq $tempSeq \n";
+				push(@dnaSeqs,$thisLine);
+				$flag=0;
+			}
+		$flag=1;
+	}	
+		
+	{
+        	$tempSeq .= "$thisLine";
+    	}
+	
+	
+	
+
+
+}
+
+close FASTA_FILE;
+
+
+open (OUT, ">$outFile") || die "Cannot open file \"$outFile\"\n\n";
+print OUT "Following FASTA files contain the mimp motif...\n";
+
+my $subSeq;
+my $mimpCount = 0;
+my $DE_count = 0;
+my $i = 0;
+my $DE_percent = 0;
+my $seqLen = 0;
+$total = @seqNames;
+for ($i = 0; $i < $total; $i++) {
+    $seqName = $seqNames[$i];
+    $dnaSeq = $dnaSeqs[$i];
+    print $dnaSeq."\n";
+	#if ($dnaSeq =~ /TT[TA]TTGCC[ATGC][ATCG]CCCACTG/g || $dnaSeq =~ /CAGTGGG[ATCG][ATCG]GGCAA[TA]AA/g || $dnaSeq =~/GTCACCC[ATCG]]ATCG]CCGTT[TA]TT/g || $dnaSeq =~/AA[TA]AACGG[ACTG][ATGC]GGGTGAC/g ) {
+    	if ($dnaSeq =~ /TT[TA]TTGCC[ATGC][ATCG]CCCACTG/g){
+	my $mimp_pos = pos($dnaSeq) ;
+        #$subSeq = $1;
+        #$seqLen = length ($subSeq);
+        #print "$seqName contains $subSeq\n";
+        #$DE_count = ($subSeq =~ tr /DEde//);        
+        #print "Number of D or E = $DE_count\n";
+        #$DE_percent = int( ($DE_count / $seqLen) * 100 );
+        #print "D or E comprise $DE_percent\n";
+        #if ($DE_percent >= 25) {
+            $mimpCount++;
+            print OUT "$seqName --mimp starts at $mimp_pos\.\n";
+            for (my $pos = 0; $pos < length($dnaSeq); $pos += 300) {
+                print OUT substr($dnaSeq, $pos, 1500), "\n";
+            #}
+            #print OUT "$aaSeq\n";
+            #print "D or E comprise $DE_percent%\n";
+        }
+    }
+    
+}
+print OUT "There are $mimpCount sequences that contain the consensus mimp motif\n";
+close (OUT);
+
+exit;
+
