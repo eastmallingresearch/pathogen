@@ -2,7 +2,11 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -pe smp 16
+<<<<<<< HEAD
 #$ -l virtual_free=1G
+=======
+#$ -l virtual_free=0.9G
+>>>>>>> 47c5dd194f9ad3148da3a0c95c057ea2bb1aa8f8
 #$ -M andrew.armitage@emr.ac.uk
 #$ -m abe
 
@@ -53,7 +57,7 @@ cd $WORK_DIR
 #########################
 
 
-
+mkdir $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/
 
 cp -r $WORK_DIR/. $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/.
 
