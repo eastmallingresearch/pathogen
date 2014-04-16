@@ -6,10 +6,10 @@ SP_DIR=$1
 echo "hash_length N50"
 
 for DIR in $( ls ./fasta_seqs/*.faa ); do
-
+	(
     echo "Looking at $DIR"
-    #~/signalp-2.0/signalp -t euk -f summary -trunc 70 $DIR > $DIR."out"
-    qsub $SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR
+	 $SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR ) &
+	 if (( $DIR % 10 == 0 )); then wait; fi # Limit to 10 concurrent subshells.
 
 done 
 
