@@ -2,7 +2,7 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -pe smp 16
-#$ -l virtual_free=5G
+#$ -l virtual_free=1G
 #$ -M andrew.armitage@emr.ac.uk
 #$ -m abe
 

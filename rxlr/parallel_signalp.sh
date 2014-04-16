@@ -9,7 +9,7 @@ for DIR in $( ls ./fasta_seqs/*.faa ); do
 	(
     echo "Looking at $DIR"
 	 $SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR ) &
-	 if (( $DIR % 8 == 0 )); then wait; fi # Limit to 8 concurrent subshells.
+	 if (( $DIR % 16 == 0 )); then wait; fi # Limit to 16 concurrent subshells.
 
 done 
 
