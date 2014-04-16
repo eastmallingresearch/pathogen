@@ -15,15 +15,16 @@
 CUR_PATH=$PWD
 WORK_DIR=/tmp/path_pipe
 
-SORTED_CONTIGS=$1
+IN_FILE=$1
 SIG_P=/home/master_files/prog_master/bin/signalp
 
-ORGANISM=$(echo $SORTED_CONTIGS | cut -d "/" -f3)
-STRAIN=$(echo $SORTED_CONTIGS | cut -d "/" -f4)
+ORGANISM=$(echo $IN_FILE | cut -d "/" -f3)
+STRAIN=$(echo $IN_FILE | cut -d "/" -f4)
+SORTED_CONTIGS=$(echo $IN_FILE | cut -d "/" -f5)
 
 mkdir $WORK_DIR
 cd $WORK_DIR
-
+cp $CUR_PATH/$IN_FILE .
 
 #######  Step 1	 ########
 # Run RXLR part1		#
