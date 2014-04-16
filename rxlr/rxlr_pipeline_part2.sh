@@ -1,5 +1,5 @@
 #!/bin/bash
-SCRIPT_DIR=$(readlink -f ${0%/*})
+SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
 echo "Tidying SGE files"
 rm -f submit_*
 echo "Concatonating files"
