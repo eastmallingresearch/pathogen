@@ -16,7 +16,7 @@ CUR_PATH=$PWD
 WORK_DIR=/tmp/path_pipe
 
 IN_FILE=$1
-SIG_P=/home/master_files/prog_master/bin/signalp
+SIG_P=/home/master_files/prog_master/bin
 
 ORGANISM=$(echo $IN_FILE | cut -d "/" -f3)
 STRAIN=$(echo $IN_FILE | cut -d "/" -f4)

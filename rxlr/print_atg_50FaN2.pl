@@ -44,8 +44,8 @@ my $seqComplete = 0;
 my $totalSeqCount = 0;
 my $tempSeq = "";
 my @sequences;
-my $input=shift;
-my $direction = shift;
+my $input= @ARGV[1];
+my $direction = @ARGV[2];
 open(INP, $input);
 while (<INP>) {
     chomp;
