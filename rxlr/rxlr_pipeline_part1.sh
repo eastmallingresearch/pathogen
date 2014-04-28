@@ -1,6 +1,6 @@
 #!/bin/bash
 INPUT=$1
-SCRIPT_DIR=$(readlink -f ${0%/*})
+SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
 SP_DIR=$2
 
 echo $SCRIPT_DIR
