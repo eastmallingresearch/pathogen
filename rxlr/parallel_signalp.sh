@@ -7,7 +7,7 @@ echo "hash_length N50"
 
 for DIR in $( ls ./fasta_seqs/*.faa ); do
     echo "Looking at $DIR"
-	$SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR
+	qsub $SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR
 
 #	 ( $SCRIPT_DIR/submit_signalp.sh $DIR $SP_DIR )  &
 #	 if (( $DIR % 16 == 0 )); then wait; fi # Limit to 16 concurrent subshells.

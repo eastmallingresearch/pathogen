@@ -159,7 +159,7 @@ cat fasta_seqs/*.faa.out > $OUTPUT_FILE
 	
 echo "Annotating signal p data "
 tail -n +5 $OUTPUT_FILE > all.f.out
-$SCRIPT_DIR/annotate_signalP2hmm3_v3.pl all.f.out all.sp.tab all.sp.pve all.sp.nve aa_cat.fa
+$SCRIPT_DIR/annotate_signalP2hmm3_v3.pl $STRAIN.f.out $STRAIN.sp.tab $STRAIN.sp.pve $STRAIN.sp.nve $STRAIN.aa_cat.fa
 
 	#######  Step 2d ########
 	# 	motif search for	#
@@ -167,7 +167,7 @@ $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl all.f.out all.sp.tab all.sp.pve all.sp.n
 	#########################
 
 echo "RxLR prediction" 
-$SCRIPT_DIR/find_rxlr_v2.pl all.sp.pve all.sp.rxlr
+$SCRIPT_DIR/find_rxlr_v2.pl all.sp.pve $STRAIN.sp.rxlr
 
 
 
@@ -185,7 +185,7 @@ $SCRIPT_DIR/find_rxlr_v2.pl all.sp.pve all.sp.rxlr
 	# MIMPs in aa sequence	#
 	#########################
 
-/home/armita/git_repos/pathogen/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN_mimps.fa
+/home/armita/git_repos/pathogen/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
 
 
 
