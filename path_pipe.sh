@@ -20,9 +20,9 @@ IN_FILE=$1
 SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
 SIG_P=/home/groups/harrisonlab/project_files/alternaria/signalp-2.0/signalp
 
-ORGANISM=$(echo $IN_FILE | cut -d "/" -f3)
-STRAIN=$(echo $IN_FILE | cut -d "/" -f4)
-SORTED_CONTIGS=$(echo $IN_FILE | cut -d "/" -f5)
+ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
+STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f2 | rev)
+SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
 mkdir $WORK_DIR
 cd $WORK_DIR
@@ -58,7 +58,7 @@ echo $SCRIPT_DIR
 
 echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F >atg.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F > atg.fa
 
 	#######  Step 1b ########
 	# revcomp contigs to get#
@@ -68,7 +68,7 @@ $SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F >atg.fa
 
 
 echo "REVCOMPing the contigs"
-$SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS >contigs_R.fa
+$SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS > contigs_R.fa
 
  
 	#######  Step 1c ########
