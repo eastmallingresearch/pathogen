@@ -46,7 +46,7 @@ my $tempSeq = "";
 my @sequences;
 my $input= $ARGV[1];
 my $direction = $ARGV[2];
-open(INP, $input);
+open(INP, "$input") || die "Cannot open file \"$input\"\n\n";
 while (<INP>) {
     chomp;
     $thisLine = $_;
