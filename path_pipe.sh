@@ -26,7 +26,7 @@ SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
 mkdir $WORK_DIR
 cd $WORK_DIR
-cp $CUR_PATH/$IN_FILE .
+cp $CUR_PATH/$IN_FILE $SORTED_CONTIGS
 
 
 
