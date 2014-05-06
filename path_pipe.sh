@@ -18,7 +18,7 @@ WORK_DIR=/tmp/path_pipe
 IN_FILE=$1
 
 SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
-SIG_P=/home/master_files/prog_master/bin
+SIG_P=/home/groups/harrisonlab/project_files/alternaria/signalp-2.0/signalp
 
 ORGANISM=$(echo $IN_FILE | cut -d "/" -f3)
 STRAIN=$(echo $IN_FILE | cut -d "/" -f4)
@@ -47,8 +47,6 @@ cp $CUR_PATH/$IN_FILE .
 # /home/armita/git_repos/pathogen/rxlr/rxlr_pipeline_part1.sh $SORTED_CONTIGS $SIG_P
 
 
-INPUT=$SORTED_CONTIGS
-
 echo $SCRIPT_DIR
 
 
@@ -60,7 +58,7 @@ echo $SCRIPT_DIR
 
 echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-$SCRIPT_DIR/print_atg_50FaN2.pl $INPUT F >atg.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F >atg.fa
 
 	#######  Step 1b ########
 	# revcomp contigs to get#
@@ -70,7 +68,7 @@ $SCRIPT_DIR/print_atg_50FaN2.pl $INPUT F >atg.fa
 
 
 echo "REVCOMPing the contigs"
-$SCRIPT_DIR/revcomp_fasta.pl $INPUT >contigs_R.fa
+$SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS >contigs_R.fa
 
  
 	#######  Step 1c ########
@@ -114,8 +112,16 @@ $SCRIPT_DIR/run_signalP3.pl aa_cat.fa
 	# batched protein files	#
 	#########################
 
-echo "Signal P- this is now  parallelised"
-$SCRIPT_DIR/parallel_signalp.sh $SIG_P
+
+
+OUTPUT_FILE=all_sp.out
+
+echo "hash_length N50"
+
+for FAA_FILE in $( ls ./fasta_seqs/*.faa ); do
+    echo "Looking at $FAA_FILE" 
+	$SIG_P -t euk -f summary -trunc 70 $FAA_FILE > $FAA_FILE."out"
+done 
 
 
 
@@ -134,13 +140,6 @@ $SCRIPT_DIR/parallel_signalp.sh $SIG_P
 
 SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
 
-	#######  Step 2a ########
-	# 	Remove SGE files	#
-	#########################
-
-
-echo "Tidying SGE files"
-rm -f submit_*
 
 	#######  Step 2b ########
 	# 	Concatenate batch	#
@@ -149,7 +148,7 @@ rm -f submit_*
 	#########################
 
 echo "Concatonating files"
-cat ./fasta_seqs/*.faa.out >all.out
+cat fasta_seqs/*.faa.out > $OUTPUT_FILE
 
 
 	#######  Step 2c ########
@@ -159,7 +158,7 @@ cat ./fasta_seqs/*.faa.out >all.out
 	
 	
 echo "Annotating signal p data "
-tail -n +5 all.out>all.f.out
+tail -n +5 $OUTPUT_FILE > all.f.out
 $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl all.f.out all.sp.tab all.sp.pve all.sp.nve aa_cat.fa
 
 	#######  Step 2d ########
@@ -186,7 +185,7 @@ $SCRIPT_DIR/find_rxlr_v2.pl all.sp.pve all.sp.rxlr
 	# MIMPs in aa sequence	#
 	#########################
 
-/home/armita/git_repos/pathogen/mimp_finder.pl $SORTED_CONTIGS $STRAIN_mimps.fa
+/home/armita/git_repos/pathogen/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN_mimps.fa
 
 
 
