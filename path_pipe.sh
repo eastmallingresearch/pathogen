@@ -114,7 +114,7 @@ $SCRIPT_DIR/run_signalP3.pl aa_cat.fa
 
 
 
-OUTPUT_FILE=all_sp.out
+OUTPUT_FILE=$STRAIN.sp.out
 
 echo "hash_length N50"
 
@@ -158,7 +158,7 @@ cat fasta_seqs/*.faa.out > $OUTPUT_FILE
 	
 	
 echo "Annotating signal p data "
-tail -n +5 $OUTPUT_FILE > all.f.out
+tail -n +5 $OUTPUT_FILE > $STRAIN.f.out
 $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl $STRAIN.f.out $STRAIN.sp.tab $STRAIN.sp.pve $STRAIN.sp.nve $STRAIN.aa_cat.fa
 
 	#######  Step 2d ########
@@ -167,7 +167,7 @@ $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl $STRAIN.f.out $STRAIN.sp.tab $STRAIN.sp.
 	#########################
 
 echo "RxLR prediction" 
-$SCRIPT_DIR/find_rxlr_v2.pl all.sp.pve $STRAIN.sp.rxlr
+$SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr
 
 
 
