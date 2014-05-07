@@ -20,8 +20,8 @@ IN_FILE=$1
 SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
 SIG_P=/home/groups/harrisonlab/project_files/alternaria/signalp-2.0/signalp
 
-ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
-STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f2 | rev)
+ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
+STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
 mkdir $WORK_DIR
@@ -80,7 +80,7 @@ $SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS > contigs_R.fa
 	
 	
 echo "Predicting coding seqs- reverse"
-$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R >atg_R.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R > atg_R.fa
 
  
 	#######  Step 1d ########
@@ -138,9 +138,6 @@ done
 #	/home/armita/git_repos/pathogen/rxlr/rxlr_pipeline_part2.sh
 
 
-SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
-
-
 	#######  Step 2b ########
 	# 	Concatenate batch	#
 	# SGE files into single #
@@ -185,7 +182,7 @@ $SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr
 	# MIMPs in aa sequence	#
 	#########################
 
-/home/armita/git_repos/pathogen/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
+$SCRIPT_DIR/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
 
 
 
