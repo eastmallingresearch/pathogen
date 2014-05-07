@@ -28,8 +28,9 @@ mkdir $WORK_DIR
 cd $WORK_DIR
 cp $CUR_PATH/$IN_FILE $SORTED_CONTIGS
 
-
-
+echo $SORTED_CONTIGS
+echo "The following files are present in the temporary directory:
+ls
 
 #########################################################################
 
