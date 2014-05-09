@@ -19,11 +19,11 @@ my $seqComplete = 0;
 
 # reads a fasta file containing one or more DNA sequences.;
 my $fastaFile = shift;
-chomp $fastaFile;
+#chomp $fastaFile;
 
 #print "\n\*\* Please enter a name of file to store results: ";
 my $outFile = shift;
-chomp $outFile;
+#chomp $outFile;
 
 open (FASTA_FILE, "$fastaFile") || die "Cannot open file \"$fastaFile\"\n\n";
 
