@@ -18,7 +18,7 @@ WORK_DIR=/tmp/path_pipe
 IN_FILE=$1
 
 SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
-SIG_P=/home/groups/harrisonlab/project_files/alternaria/signalp-2.0/signalp
+SIG_P=$CUR_PATH/signalp-2.0/signalp
 
 ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
@@ -90,7 +90,7 @@ $SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R > atg_R.fa
 	#########################
 
 echo "Joining Forward and Reverse Files"
-cat atg.fa atg_R.fa>aa_cat.fa
+cat atg.fa atg_R.fa>$STRAIN.aa_cat.fa
 
 	#######  Step 1e ########
 	# 		Cleanup			#
@@ -106,7 +106,7 @@ rm -rf ./fasta_seq
 	#########################
 	
 echo "Outputting batch FASTA files for Signal P"
-$SCRIPT_DIR/run_signalP3.pl aa_cat.fa
+$SCRIPT_DIR/run_signalP3.pl $STRAIN.aa_cat.fa
 
 	#######  Step 1g ########
 	# Run Signal P on 		#
@@ -135,9 +135,6 @@ done
 #######  Step 2	 ########
 # Run RXLR part2		#
 #########################
-
-#	/home/armita/git_repos/pathogen/rxlr/rxlr_pipeline_part2.sh
-
 
 	#######  Step 2b ########
 	# 	Concatenate batch	#
