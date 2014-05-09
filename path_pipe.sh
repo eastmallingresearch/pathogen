@@ -176,11 +176,11 @@ $SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr
 #########################
 
 	#######  Step 3a ########
-	# 	motif search for
+	# 	motif search for	#
 	# MIMPs in aa sequence	#
 	#########################
 
-$SCRIPT_DIR/mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
+$SCRIPT_DIR/../mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
 
 
 
