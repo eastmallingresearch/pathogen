@@ -17,7 +17,7 @@ WORK_DIR=/tmp/path_pipe
 
 IN_FILE=$1
 
-SCRIPT_DIR=/home/armita/git_repos/pathogen/rxlr
+SCRIPT_DIR=/home/armita/git_repos/emr_repos/pathogen/rxlr
 SIG_P=$CUR_PATH/signalp-2.0/signalp
 
 ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
