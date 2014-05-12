@@ -44,15 +44,10 @@ my $seqComplete = 0;
 my $totalSeqCount = 0;
 my $tempSeq = "";
 my @sequences;
-<<<<<<< HEAD
 my $input=shift;
 my $direction = shift;
-open(INP, $input);
-=======
-my $input = $ARGV[0];
-my $direction = $ARGV[1];
-open(INP, "$input") || die "Cannot open file \"$input\"\n\n";
->>>>>>> 81452ad2079ec086f96b83d2a32e221b985e5a89
+open(INP, $input) || die "Cannot open file \"$input\"\n\n";
+
 while (<INP>) {
     chomp;
     $thisLine = $_;
