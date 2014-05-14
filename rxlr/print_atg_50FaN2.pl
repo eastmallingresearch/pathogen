@@ -44,7 +44,7 @@ my $seqComplete = 0;
 my $totalSeqCount = 0;
 my $tempSeq = "";
 my @sequences;
-my $input=shift;
+my $input = shift;
 my $direction = shift;
 open(INP, $input) || die "Cannot open file \"$input\"\n\n";
 
@@ -71,7 +71,7 @@ while (<INP>) {
     if ($seqComplete) {
         $tempSeq =~ /^(>.*)\n/;
 		my $header = $1;
-		print_atg_50 ($header,$tempSeq, 1, $direction);
+		print_atg_50 ($header, $tempSeq, 1, $direction);
         $tempSeq = "$thisLine";
         $seqComplete = 0;
         $inSequence = 0;
@@ -80,7 +80,7 @@ while (<INP>) {
 }
 $tempSeq =~ /^(>.*)\n/;
 my $header = $1;
-print_atg_50 ($header,$tempSeq, 1);
+print_atg_50 ($header,$tempSeq, 1, $direction);
 $totalSeqCount++;
 
 exit;
