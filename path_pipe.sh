@@ -162,7 +162,7 @@ $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl $STRAIN.f.out $STRAIN.sp.tab $STRAIN.sp.
 	#########################
 
 echo "RxLR prediction" 
-$SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr
+$SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr $STRAIN.sp.sum_rxlr
 
 
 

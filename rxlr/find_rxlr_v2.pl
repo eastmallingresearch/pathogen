@@ -24,6 +24,9 @@ chomp $fastaFile;
 my $outFile = shift;
 chomp $outFile;
 
+# Collect a second output file from the given inputs to make a summary file.
+my $summary_out = shift;
+chomp $summary_out; 
 
 open (FASTA_FILE, "$fastaFile") || die "Cannot open file \"$fastaFile\"\n\n";
 while (<FASTA_FILE>) {
@@ -42,6 +45,8 @@ close FASTA_FILE;
 
 open (OUT, ">$outFile") || die "Cannot open file \"$outFile\"\n\n";
 print OUT "Following FASTA files contain the effector motif...\n";
+open (SUM_OUT, ">$summary_out") || die "Cannot open file \"$summary_out\"\n\n";
+print SUM_OUT "Gene	RXLR_present	Position_in_seq\n";
 
 my $subSeq;
 my $effectorCount = 0;
@@ -64,13 +69,16 @@ for ($i = 0; $i < $total; $i++) {
         #print "D or E comprise $DE_percent\n";
         #if ($DE_percent >= 25) {
             $effectorCount++;
-            print OUT "$seqName --RXLR starts at $RXLR_pos\.\n";
+            print OUT "$seqName	--RXLR_starts_at	$RXLR_pos\n";
+            print SUM_OUT "$seqName	YES	$RXLR_pos\n";
             for (my $pos = 0; $pos < length($aaSeq); $pos += 300) {
                 print OUT substr($aaSeq, $pos, 300), "\n";
+            }
             #}
             #print OUT "$aaSeq\n";
             #print "D or E comprise $DE_percent%\n";
-        }
+    } else {
+    	print SUM_OUT "$seqName NO	-";
     }
     
 }

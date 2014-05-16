@@ -150,7 +150,7 @@ for (@results) {
     if (($signalPeptide) && ($cleaveSite < 41) && ($cleaveSite > 9) && ($probability >= 0.9)) {
     	if (exists $sequences{$unique_ID}) {
     		$seq = $sequences{$unique_ID}; 
-    		$seq =~ s/^(>.*?)\n/$1 --HMM score = $probability --Signal peptide length = $cleaveSite\n/gm;
+    		$seq =~ s/^(>.*?)\n/$1 \t--HMM_score=\t$probability\t--Signal_peptide_length=\t$cleaveSite\n/gm;
         	push (@signalPeptides, $seq);        	
         }
         $thisName .= "\tYES\t$probability\t$cleaveSite\n";
