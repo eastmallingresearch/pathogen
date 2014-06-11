@@ -6,8 +6,12 @@ use warnings;
 #
 #-------------------------------------------------------------------------
 # find_rxlr.pl
+use lib qw(/home/harrir/git_master/pathogen/Pathogen-Annotate/lib/); # This path is just temporary
+use Pathogen::Annotate;
+
 #
 my $seqName = "";
+
 my @seqNames = ();
 my $aaSeq = "";
 my @aaSeqs = ();

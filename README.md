@@ -13,3 +13,4 @@ I checked out a local branch before you (Andy) made the changes to the master th
 https://github.s3.amazonaws.com/media/progit.en.pdf
 
 This will also be useful 
+http://www.perl.com/pub/2007/08/09/making-perl-modules.html
