@@ -164,6 +164,7 @@ $SCRIPT_DIR/annotate_signalP2hmm3_v3.pl $STRAIN.f.out $STRAIN.sp.tab $STRAIN.sp.
 echo "RxLR prediction" 
 $SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr $STRAIN.sp.sum_rxlr
 
+tail -n +2 $STRAIN.sp.rxlr | head -n -1 > "$STRAIN"_sp_rxlr.fa
 
 
 
@@ -182,7 +183,7 @@ $SCRIPT_DIR/find_rxlr_v2.pl $STRAIN.sp.pve $STRAIN.sp.rxlr $STRAIN.sp.sum_rxlr
 
 $SCRIPT_DIR/../mimp_finder/mimp_finder.pl $SORTED_CONTIGS $STRAIN.mimps.fa
 
-
+tail -n +2 $STRAIN.mimps.fa | head -n -1 > "$STRAIN"_mimps.fa
 
 #########################################################################
 
