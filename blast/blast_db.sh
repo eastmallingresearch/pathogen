@@ -15,7 +15,7 @@
 #-------------------------------------------------------
 
 CUR_PATH=$PWD
-WORK_DIR=tmp/path_pipe
+WORK_DIR=/tmp/path_pipe
 
 QUERY=$1
 TARGET=$2
@@ -32,7 +32,7 @@ cp $CUR_PATH/$TARGET $SORTED_CONTIGS
 # 		Step 1.		Make database
 #-------------------------------------------------------
 
-makeblastdb -in $TARGET -input_type fasta -dbtype nucl -title "$ORGANISM"_"$STRAIN".db -parse_seqids -out "$ORGANISM"_"$STRAIN".db
+makeblastdb -in $SORTED_CONTIGS -input_type fasta -dbtype nucl -title "$ORGANISM"_"$STRAIN".db -parse_seqids -out "$ORGANISM"_"$STRAIN".db
 
 
 #-------------------------------------------------------
@@ -43,10 +43,20 @@ makeblastdb -in $TARGET -input_type fasta -dbtype nucl -title "$ORGANISM"_"$STRA
 tblastn -db "$ORGANISM"_"$STRAIN".db -query $QUERY -out "$ORGANISM"_"$STRAIN"_hits.txt -evalue 0.01
 
 
+#-------------------------------------------------------
+# 		Step 3.		Summarise blast
+#-------------------------------------------------------
+
+grep '>' P.inf_AVR2.fa > /home/armita/summary.txt
+grep -A1 '>' P.inf_AVR2.fa | tail -n 1 | paste /home/armita/summary.txt
+
+
+
 #------------------------------------------------------
-# 		Step 3.		Cleanup
+# 		Step 4.		Cleanup
 #------------------------------------------------------
 
+rm $SORTED_CONTIGS
 mkdir -p $CUR_PATH/analysis/blast/$ORGANISM/$STRAIN
 cp $WORK_DIR/* $CUR_PATH/analysis/blast/$ORGANISM/$STRAIN/.
 rm -r $WORK_DIR
