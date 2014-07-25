@@ -20,7 +20,7 @@ IN_GENOME=$2
 if [ "$3" ]; then SCRIPT_DIR=$3; else SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/blast; fi
 ORGANISM=$(echo $IN_GENOME | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
-QUERY=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
+QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
 GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
 mkdir $WORK_DIR
 cd $WORK_DIR
@@ -70,7 +70,7 @@ paste -d , "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNAME"
 
 mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
 
-cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/.
+cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/.
 
 rm -r $WORK_DIR/
 
