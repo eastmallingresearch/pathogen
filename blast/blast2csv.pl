@@ -2,7 +2,8 @@
 use strict;
 #use Cwd;
 use Bio::SeqIO;
-use Bio::Tools::Run::StandAloneBlast;
+#use Bio::Tools::Run::StandAloneBlast;
+use Bio::Tools::Run::StandAloneBlastPlus;
 use Bio::Search::Result::BlastResult;
 
 # Perform a tBlASTn search on a pre-made database and then parse the results 
@@ -11,10 +12,12 @@ use Bio::Search::Result::BlastResult;
 my $usage = "blast2csv.pl <query_file.fa> <database_name> > <outfile.csv>";
 my $query_file = shift or die $usage;
 my $database = shift or die $usage;
-my $blast_obj;
+#my $blast_obj;
+my $blast_fac;
 my $result_obj;
 my $report_obj;
 my @ao_outlines;
+my $seq_obj;
 
 #-------------------------------------------------------
 # 		Step 1.		Set outfile header
@@ -27,23 +30,38 @@ print "$outline_header";
 # 		Step 2.		Create BLAST factory
 #-------------------------------------------------------
  
-$blast_obj = Bio::Tools::Run::StandAloneBlast->new('-program'  => 'tblastn', '-database' => $database);
+#$blast_obj = Bio::Tools::Run::StandAloneBlast->new('-program'  => 'tblastn', '-database' => $database);
+$blast_fac = Bio::Tools::Run::StandAloneBlastPlus->new(
+												'-db_name' => 'genome_db', 
+												'-db_dir' => '.', 
+												'-create' => 1, 
+												'-overwrite' => 1,  
+												'-db_data' => $database,
+												'-no_throw_on_crash' => 1
+												);
+												
+$blast_fac->make_db;
 
 
 #-------------------------------------------------------
 # 		Step 3.		Open query file
 #------------------------------------------------------- 
 
-my $seq_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => "fasta", '-alphabet' => 'dna' );
+my $input_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => 'fasta', '-alphabet' => 'dna' );
 
 #-------------------------------------------------------
 # 		Step 4.		Perform blast for each query
 #-------------------------------------------------------
  
-while (my $seq = $seq_obj->next_seq) {
- 	$report_obj = $blast_obj->blastall($seq);
- 	$result_obj = $report_obj->next_result;
-  	my @ao_hits = $result_obj->hits;
+while (my $seq = $input_obj->next_seq) {
+#	my $seq = $seq_obj->seq;
+# 	$report_obj = $blast_obj->blastall($seq);
+# 	$result_obj = $report_obj->next_result;
+	$report_obj = $blast_fac->run('-method' => 'tblastn', '-query' => $seq );
+#	$result_obj = $report_obj->next_result;
+#	$result_obj = $report_obj->next_hit;
+# 	my @ao_hits = $result_obj->hits;
+	my @ao_hits = $report_obj->hits;
   	my $hit = $ao_hits[0];
 
 #-------------------------------------------------------
@@ -52,7 +70,8 @@ while (my $seq = $seq_obj->next_seq) {
  	my $seq_id =  $seq->id;
 	my $sequence = $seq->seq;
 	my $query_lgth = (($seq->length)*3);
-	my $no_hits = $result_obj->num_hits;
+#	my $no_hits = $result_obj->num_hits;
+	my $no_hits = $report_obj->num_hits;
 
 #-------------------------------------------------------
 # 		Step 6.		Declare and set hit values

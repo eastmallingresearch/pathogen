@@ -37,7 +37,7 @@ OUTNAME="$STRAIN"_"$QUERY"
 
 
 makeblastdb -in $QUERY -dbtype prot -out query_db -title query_db
-makeblastdb -in $GENOME -dbtype nucl -out genome_db -title genome_db
+#makeblastdb -in $GENOME -dbtype nucl -out genome_db -title genome_db
 
 #-------------------------------------------------------
 # 		Step 2.		blast queries against themselves
@@ -55,7 +55,8 @@ $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
 # 		Step 4.		blast queries against genome
 #-------------------------------------------------------
 
-$SCRIPT_DIR/blast2csv.pl $QUERY genome_db > "$OUTNAME"_hits.csv
+#$SCRIPT_DIR/blast2csv.pl $QUERY genome_db > "$OUTNAME"_hits.csv
+$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME > "$OUTNAME"_hits.csv
 
 #-------------------------------------------------------
 # 		Step 5.		combine the homolog group table
