@@ -88,7 +88,7 @@ while (my $seq = $input_obj->next_seq) {
  	
  	if ($hit) {  					
  		my $hsp = $hit->hsp('best');
- 		my $hit_id = $hit->name;
+ 		my $hit_id = substr $hit->name(), 4;
 		my $hit_seq = $hsp->seq_str; 	
  		my $hit_lgth = length ($hit_seq);
  		my $per_query = ($hit_lgth / $query_lgth);

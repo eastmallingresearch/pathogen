@@ -32,41 +32,32 @@ OUTNAME="$STRAIN"_"$QUERY"
 #GENOME="sorted_contigs.fa"
 
 #-------------------------------------------------------
-# 		Step 1.		Make blast databases
+# 		Step 1.		blast queries against themselves
 #-------------------------------------------------------
 
-
-makeblastdb -in $QUERY -dbtype prot -out query_db -title query_db
-#makeblastdb -in $GENOME -dbtype nucl -out genome_db -title genome_db
+$SCRIPT_DIR/blast_self.pl $QUERY > "$QUERY"_self.csv
 
 #-------------------------------------------------------
-# 		Step 2.		blast queries against themselves
-#-------------------------------------------------------
-
-$SCRIPT_DIR/blast_self.pl $QUERY query_db > "$QUERY"_self.csv
-
-#-------------------------------------------------------
-# 		Step 3.		simplify hits table into homolog groups
+# 		Step 2.		simplify hits table into homolog groups
 #-------------------------------------------------------
 
 $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
 
 #-------------------------------------------------------
-# 		Step 4.		blast queries against genome
+# 		Step 3.		blast queries against genome
 #-------------------------------------------------------
 
-#$SCRIPT_DIR/blast2csv.pl $QUERY genome_db > "$OUTNAME"_hits.csv
 $SCRIPT_DIR/blast2csv.pl $QUERY $GENOME > "$OUTNAME"_hits.csv
 
 #-------------------------------------------------------
-# 		Step 5.		combine the homolog group table
+# 		Step 4.		combine the homolog group table
 #					 with the blast result table
 #-------------------------------------------------------
 
 paste -d '\t' "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNAME"_homologs.csv
 
 #-------------------------------------------------------
-# 		Step 6.		Cleanup
+# 		Step 5.		Cleanup
 #-------------------------------------------------------
 
 mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
@@ -75,8 +66,3 @@ cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $CUR_PATH/analysis/blast_homology/$ORGAN
 
 rm -r $WORK_DIR/
 
-# rm homology_tmp.csv
-# rm query_db*
-# rm genome_db*
-# rm homology_tab.csv
-# rm blast_homologs.csv

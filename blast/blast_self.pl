@@ -2,8 +2,7 @@
 use strict;
 use Cwd;
 use Bio::SeqIO;
-use Bio::Tools::Run::StandAloneBlast;
-use Bio::Search::Result::BlastResult;
+use Bio::Tools::Run::StandAloneBlastPlus;
 
 # Blast a file of candidate effectors against themselves to establish 
 # homology between query sequences
@@ -12,11 +11,10 @@ use Bio::Search::Result::BlastResult;
 # 		Step 1.		Initialise values
 #-------------------------------------------------------
 
-my $usage = "blast_self.pl <query_file.fa> <database_name> > <outfile.csv>";
+my $usage = "blast_self.pl <query_file.fa> > <outfile.csv>";
 my $query_file = shift or die $usage;
-my $database = shift or die $usage;
 my @keys;
-my $blast_obj;
+my $blast_fac;
 my $result_obj;
 my $report_obj;
 my %hash;
@@ -33,9 +31,16 @@ my %outline_hash;
 #-------------------------------------------------------
 # 		Step 2.		Create BLAST factory
 #-------------------------------------------------------
- 
-$blast_obj = Bio::Tools::Run::StandAloneBlast->new('-program'  => 'blastp', '-database' => $database, '-e' => 1e-10);
 
+$blast_fac = Bio::Tools::Run::StandAloneBlastPlus->new(
+												'-db_name' => 'query_db', 
+												'-db_dir' => '.', 
+												'-create' => 1, 
+												'-overwrite' => 1,  
+												'-db_data' => $query_file,
+												'-no_throw_on_crash' => 1,
+												);
+$blast_fac->make_db;												
 
 #-------------------------------------------------------
 # 		Step 3.		Collect sequence names from input
@@ -61,7 +66,6 @@ foreach (@ao_seqs) {
 # 		Step 3.	Create hash to reference for sequence order
 #------------------------------------------------------- 
 
-#my @keys = keys %hash;
 print "header\t";
 foreach (@keys) {print "$_\t";}
 print "\n";
@@ -83,36 +87,23 @@ while (my $seq = $seq_obj->next_seq) {
 	my @ao_homologs;
 	my $id = $seq->id;
 	@outline_edit = @outline_start;
-	unshift @outline_edit, $id;	
-	$report_obj = $blast_obj->blastall($seq);
- 	$result_obj = $report_obj->next_result;
-  	my @ao_hits = $result_obj->hits;
-  	foreach (@ao_hits) {
-  		my $hit = $_;
-  		if ($hit) {  					
- 			my $hit_id = $hit->name;
+	unshift @outline_edit, $id;
+	$report_obj = $blast_fac->run('-method' => 'blastp', '-query' => $seq, '-method_args' => ['-evalue' => 1e-10]);
+  	my @ao_hits = $report_obj->hits;
+  	foreach (@ao_hits) {				
+ 		my $hit = $_;
+  		if ($hit) {			
+ 			my $hit_id = substr $hit->name(), 4;
  			my $hit_element = $hash{$hit_id};
 			push @ao_homologs, $hit_element;
-			
 			splice @outline_edit, "$hit_element", 1, '1';	 			
 		}
   	}
 	
-#	$outline_hash{"$id"} = "@outline_edit";	
 	foreach (@outline_edit) {
 		print "$_\t";
 	}		
 	print "\n";
 }
-
-#print "\n";
-
-
-# my @keys2 = keys %outline_hash;
-# foreach (@keys2) {
-# 	my @print_line = split ( ' ' , $outline_hash{"$_"});
-# 	foreach (@print_line) {print "$_\t";}
-# 	print "\n";
-# }
 
 exit;
