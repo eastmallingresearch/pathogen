@@ -62,7 +62,7 @@ $SCRIPT_DIR/blast2csv.pl $QUERY genome_db > "$OUTNAME"_hits.csv
 #					 with the blast result table
 #-------------------------------------------------------
 
-paste -d , "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNAME"_homologs.csv
+paste -d '\t' "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNAME"_homologs.csv
 
 #-------------------------------------------------------
 # 		Step 6.		Cleanup

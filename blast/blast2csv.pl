@@ -58,26 +58,27 @@ while (my $seq = $seq_obj->next_seq) {
 # 		Step 6.		Declare and set hit values
 #-------------------------------------------------------
 
-	my $hit_id ;
-	my $hit_lgth ;
-	my $per_query ;
-	my $ident ;
-	my $per_id ;
-	my $e_value ;		
- 	my $hit_seq ;
- 	my $outline ;
+	my $hit_id;
+	my $hit_lgth;
+	my $per_query;
+	my $ident;
+	my $per_id;
+	my $e_value;		
+ 	my $hit_seq;
+ 	my $outline;
  	
  	if ($hit) {  					
  		my $hsp = $hit->hsp('best');
  		my $hit_id = $hit->name;
-		my $hit_lgth = $hit->query_length;
-		my $per_query = ($hit_lgth / $query_lgth);
-		$per_query = substr $per_query, 0, 4;
-		my $ident = $hsp->num_identical();
-		my $per_id = ($ident / $query_lgth);
-		$per_id = substr $per_query, 0, 4;
+		my $hit_seq = $hsp->seq_str; 	
+ 		my $hit_lgth = length ($hit_seq);
+ 		my $per_query = ($hit_lgth / $query_lgth);
+ 		$per_query = substr $per_query, 0, 4;
+ 		my $ident = $hsp->num_identical();
+		my $per_id = $hit->frac_identical;
+		$per_id = substr $per_id, 0, 4;
 		my $e_value = $hsp->evalue;			
- 		my $hit_seq = $hsp->seq_str; 	
+
  		
  		$outline = "$seq_id\t$sequence\t$query_lgth\t$no_hits\t$hit_id\t$e_value\t$hit_lgth\t$per_query\t$per_id\t$hit_seq\n";	
  	}
