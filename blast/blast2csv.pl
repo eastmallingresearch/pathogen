@@ -1,15 +1,13 @@
 #!/usr/bin/perl -w
 use strict;
-#use Cwd;
 use Bio::SeqIO;
-#use Bio::Tools::Run::StandAloneBlast;
 use Bio::Tools::Run::StandAloneBlastPlus;
 use Bio::Search::Result::BlastResult;
 
-# Perform a tBlASTn search on a pre-made database and then parse the results 
+# Perform a tBlASTn search of query genes against a file containing nucleotide data. It will then parse the results 
 # into a tab separated output
 
-my $usage = "blast2csv.pl <query_file.fa> <database_name> <no.hits_to_report> > <outfile.csv>\n\n";
+my $usage = "blast2csv.pl <query_file.fa> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
 my $query_file = shift or die $usage;
 my $database = shift or die $usage;
 my $no_hits = shift or die $usage;
