@@ -28,9 +28,6 @@ cp $CUR_PATH/$IN_GENOME $GENOME
 cp $CUR_PATH/$IN_QUERY $QUERY
 OUTNAME="$STRAIN"_"$QUERY"
 
-#QUERY="P.inf_AVR2.fa"
-#GENOME="sorted_contigs.fa"
-
 #-------------------------------------------------------
 # 		Step 1.		blast queries against themselves
 #-------------------------------------------------------
@@ -48,7 +45,6 @@ $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
 #-------------------------------------------------------
 
 $SCRIPT_DIR/blast2csv.pl $QUERY $GENOME 5 > "$OUTNAME"_hits.csv
-#$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME 2 
 
 #-------------------------------------------------------
 # 		Step 4.		combine the homolog group table

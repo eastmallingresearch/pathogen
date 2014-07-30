@@ -61,7 +61,6 @@ while (my $seq = $input_obj->next_seq) {
 
 	$report_obj = $blast_fac->run('-method' => 'tblastn', '-query' => $seq, '-method_args' => ['-evalue' => 1e-40]);
 	my @ao_hits = $report_obj->hits;
-#  	my $hit = $ao_hits[0];
 
 #-------------------------------------------------------
 # 		Step 5.		Get query info
@@ -87,32 +86,23 @@ while (my $seq = $input_obj->next_seq) {
  	my $start;
  	my $end;
  	my @ao_hsps;
- #	if ($hit) { 
- #		my @ao_hsps = $hit->hsps;
- 		my $hit_itterations;
+ 	my $hit_itterations;
  	foreach (@ao_hits) {
- #		my $hsp = $hit->hsp('best');
- # 		foreach (@ao_hsps[0 .. $no_hits]) {
- # 			my $hsp = $_ or last;
- 			my $hit = $_;
- 			my $hsp = $hit->hsp('best') or last;
- 			$hit_id = substr $hit->name(), 4;
-			$hit_seq = $hsp->seq_str; 	
- 			$hit_lgth = length ($hit_seq);
- 			$per_query = ($hit_lgth / $query_lgth);
- 			$per_query = substr $per_query, 0, 4;
- 			$per_id = ($hsp->num_identical() / $query_lgth);
- 			$per_id = substr $per_id, 0, 4;
-#			$per_id = $hit->frac_identical;
-#			$per_id = substr $per_id, 0, 4;
-			$e_value = $hsp->evalue;
-			$strand = $hsp->strand('hit');
-			$start = $hsp->start('hit');
-			$end = $hsp->end('hit');
-			$outline .= "\t$hit_id\t$e_value\t$hit_lgth\t$per_query\t$per_id\t$strand\t$start\t$end\t$hit_seq";				
-		
-	#	}
- 		
+ 		my $hit = $_;
+ 		my $hsp = $hit->hsp('best') or last;
+ 		$hit_id = substr $hit->name(), 4;
+		$hit_seq = $hsp->seq_str; 	
+ 		$hit_lgth = length ($hit_seq);
+ 		$per_query = ($hit_lgth / $query_lgth);
+ 		$per_query = substr $per_query, 0, 4;
+		$per_id = ($hsp->num_identical() / $query_lgth);
+		$per_id = substr $per_id, 0, 4;
+		$e_value = $hsp->evalue;
+		$strand = $hsp->strand('hit');
+		$start = $hsp->start('hit');
+		$end = $hsp->end('hit');
+		$outline .= "\t$hit_id\t$e_value\t$hit_lgth\t$per_query\t$per_id\t$strand\t$start\t$end\t$hit_seq";				
+	
 	}
  	
 	$outline .= "\n";	
