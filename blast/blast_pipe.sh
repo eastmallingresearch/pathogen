@@ -47,7 +47,8 @@ $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
 # 		Step 3.		blast queries against genome
 #-------------------------------------------------------
 
-$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME > "$OUTNAME"_hits.csv
+$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME 5 > "$OUTNAME"_hits.csv
+#$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME 2 
 
 #-------------------------------------------------------
 # 		Step 4.		combine the homolog group table
