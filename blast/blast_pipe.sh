@@ -1,8 +1,8 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 4
-#$ -l virtual_free=4G
+#$ -pe smp 16
+#$ -l virtual_free=0.9G
 
 
 # script to run blast homology pipe
@@ -21,7 +21,7 @@ STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
 QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
 GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
 CUR_PATH=$PWD
-WORK_DIR=/tmp/blast_"$STRAIN"
+WORK_DIR=$TMP/blast_"$STRAIN"
 mkdir $WORK_DIR
 cd $WORK_DIR
 cp $CUR_PATH/$IN_GENOME $GENOME

@@ -52,7 +52,7 @@ foreach (@keys) {
 	my $cur_column;
 	foreach (@keys) {
 		my @cur_line = split (' ', $hash_tab{"$_"});
-		$cur_column .= "$cur_line[$column_no]";
+		$cur_column .= "$cur_line[$column_no];";
 #		print "$cur_column\n";
 #		print "@cur_line\n";
 	}
@@ -60,10 +60,11 @@ foreach (@keys) {
 	next if $seen{$cur_column}++;	# Skips if previously seen column
 	next if (($cur_column =~ tr/1//) == 1);	# Skips if column contains a single element.
 	$cur_column =~ s/1/$group_no/g;
-	my @ao_elements = (split ('', "$cur_column"));
+	my @ao_elements = (split (';', "$cur_column"));
 	$group_no ++;
 	foreach (@keys) {
 		$out_hash{"$_"} .= shift @ao_elements;
+		$out_hash{"$_"} .= ";";
 	}
 }
 
@@ -77,7 +78,7 @@ while ($itterations != $group_no){ print "\tGrp$itterations"; $itterations ++ ;}
 print "\n";
 
 foreach (@keys) {
-	my $outline = (join ("\t", (split ('', $out_hash{$_}))));
+	my $outline = (join ("\t", (split (';', $out_hash{$_}))));
 	print "$_\t$outline\n";
 }
 
