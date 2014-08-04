@@ -32,19 +32,30 @@ echo '(These require a \s0 and \s1 for each genome you input)'
 #	
 #
 #
+#NUMBER=0
 
 for INFILE in $@; do
-	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
-	head -n1 $INFILE | cut -f1 > "$INFILE"_absent.csv
-	head -n1 $INFILE | cut -f1 > "$INFILE"_presence.csv
+#	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
+#	head -n1 $INFILE | cut -f1 > "$INFILE"_absent.csv
+#	head -n1 $INFILE | cut -f1 > "$INFILE"_presence.csv
+	printf '' > "$INFILE"_present.csv
+	printf '' > "$INFILE"_absent.csv
+	printf '' > "$INFILE"_presence.csv
 	while read line; do
+#		NUMBER=$((NUMBER+1))
 		ID=$(printf $line | cut -d' '  -f1)
 		HIT=$(echo $line | cut -d' ' -f1020)		# Edit this line before running.
-		if [ "$HIT" != "0" ]; then
+#		echo "$HIT"
+#		if [ "$HIT" = "ID" ]; then
+#			continue
+#		elif [ "$HIT" != "0" ]; then
+		if [ "$HIT" = "1" ]; then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
 			printf "$ID""\t1\n" >> "$INFILE"_presence.csv
-		else
+		fi
+#		else
+		if [ "$HIT" = "0" ]; then
 			printf "$ID" >> "$INFILE"_absent.csv
 			printf "\n" >> "$INFILE"_absent.csv
 			printf "$ID""\t0\n" >> "$INFILE"_presence.csv
@@ -58,7 +69,7 @@ done
 #-------------------------------------------------------
 
 NUMBER=1
-cut -f1 "$1" > tmp_tab"$NUMBER".csv
+cut -f1 "$1" | tail -n+2 > tmp_tab"$NUMBER".csv
 for INFILE in $@; do
 	NEXT_NUM=$((NUMBER+1))
 	paste -d '\t' tmp_tab"$NUMBER".csv <(cut -f2 "$INFILE"_presence.csv) > tmp_tab"$NEXT_NUM".csv
