@@ -10,12 +10,12 @@
 #	genes present in all genomes; absent_all.csv - genes absent in all genomes; 
 #	differentials.csv - genes present in some, but not all genomes.
 
-USAGE="blast_differentials.sh <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> 
+USAGE="blast_differentials.sh <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> <blast_pipe_outfile.csv>"
 
-echo "USAGE"
+echo "$USAGE"
 echo ""
-echo "Have you remembered to edit the grep expressions on lines 74-76?"
-echo "(These require \s0 and \1 for each genome you input)"
+echo "Have you remembered to edit the grep expressions on lines 76-78?"
+echo '(These require a \s0 and \s1 for each genome you input)'
 
 #-------------------------------------------------------
 # 		Step 1.		Collect a list of input files; 
