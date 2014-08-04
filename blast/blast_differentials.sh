@@ -10,6 +10,12 @@
 #	genes present in all genomes; absent_all.csv - genes absent in all genomes; 
 #	differentials.csv - genes present in some, but not all genomes.
 
+USAGE="blast_differentials.sh <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> 
+
+echo "USAGE"
+echo ""
+echo "Have you remembered to edit the grep expressions on lines 74-76?"
+echo "(These require \s0 and \1 for each genome you input)"
 
 #-------------------------------------------------------
 # 		Step 1.		Collect a list of input files; 
@@ -23,18 +29,18 @@
 for INFILE in $@; do
 	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
 	head -n1 $INFILE | cut -f1 > "$INFILE"_absent.csv
-	head -n1 $INFILE | cut -f1 > presence_"$INFILE".csv	
+	head -n1 $INFILE | cut -f1 > "$INFILE"_presence.csv
 	while read line; do
 		ID=$(printf $line | cut -d' '  -f1)
 		HIT=$(echo $line | cut -d' ' -f1020)
 		if [ "$HIT" != "0" ]; then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
-			printf "$ID""\t1\n" >> presence_"$INFILE".csv
+			printf "$ID""\t1\n" >> "$INFILE"_presence.csv
 		else
 			printf "$ID" >> "$INFILE"_absent.csv
 			printf "\n" >> "$INFILE"_absent.csv
-			printf "$ID""\t0\n" >> presence_"$INFILE".csv
+			printf "$ID""\t0\n" >> "$INFILE"_presence.csv
 		fi
 	done<$INFILE
 done 
@@ -48,7 +54,7 @@ NUMBER=1
 cut -f1 "$1" > tmp_tab"$NUMBER".csv
 for INFILE in $@; do
 	NEXT_NUM=$((NUMBER+1))
-	paste -d '\t' tmp_tab"$NUMBER".csv <(cut -f2 presence_"$INFILE".csv) > tmp_tab"$NEXT_NUM".csv
+	paste -d '\t' tmp_tab"$NUMBER".csv <(cut -f2 "$INFILE"_presence.csv) > tmp_tab"$NEXT_NUM".csv
 	NUMBER=$((NUMBER+1))
 done
 
@@ -58,12 +64,18 @@ done
 #		genes that are present in all genomes, absent 
 #		in all genomes, or are differential.
 #-------------------------------------------------------
+#
+#	ESSENTIAL
+#		Grep expressions must be edited before running.
+#		These require a \s0 and \s1 for each genome in
+#		the analysis
+#
 
 mv tmp_tab"$NEXT_NUM".csv presence_tab.csv
 rm tmp_tab*
-grep -P '\s0\s0\s0\s0' presence_tab.csv > absent_all.csv
-grep -P '\s1\s1\s1\s1' presence_tab.csv > present_all.csv
-grep -vP '\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1' > differentials.csv
+grep -P '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
+grep -P '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
+grep -vP '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
 
 
 exit
