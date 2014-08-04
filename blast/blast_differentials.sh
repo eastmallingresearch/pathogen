@@ -14,7 +14,11 @@ USAGE="blast_differentials.sh <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> 
 
 echo "$USAGE"
 echo ""
-echo "Have you remembered to edit the grep expressions on lines 76-78?"
+echo "Have you remembered to edit line 42?"
+echo "the number of the column which containins the number of hits in <blast_pipe_outfile.csv>?"
+echo "(Edit the number after -f)" 
+echo ""
+echo "Have you remembered to edit the grep expressions on lines 83-85?"
 echo '(These require a \s0 and \s1 for each genome you input)'
 
 #-------------------------------------------------------
@@ -24,7 +28,10 @@ echo '(These require a \s0 and \s1 for each genome you input)'
 #		list of all query names for differentials file
 #		later.
 #-------------------------------------------------------
-
+#
+#	
+#
+#
 
 for INFILE in $@; do
 	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
@@ -32,7 +39,7 @@ for INFILE in $@; do
 	head -n1 $INFILE | cut -f1 > "$INFILE"_presence.csv
 	while read line; do
 		ID=$(printf $line | cut -d' '  -f1)
-		HIT=$(echo $line | cut -d' ' -f1020)
+		HIT=$(echo $line | cut -d' ' -f1020)		# Edit this line before running.
 		if [ "$HIT" != "0" ]; then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
@@ -73,9 +80,9 @@ done
 
 mv tmp_tab"$NEXT_NUM".csv presence_tab.csv
 rm tmp_tab*
-grep -P '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
-grep -P '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
-grep -vP '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
+grep -P '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
+grep -P '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
+grep -vP '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
 
 
 exit
