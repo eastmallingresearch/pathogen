@@ -1,63 +1,69 @@
 #!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -pe smp 4
+#$ -l virtual_free=1G
 
-#INFILE=analysis/blast_homology/P.cactorum/404/404_PHI_36_accessions_homologs.csv
-#INFILE=$1
-#echo "Infile is: $INFILE"
+#	blast_differentials.sh summarises the results of blast.sh accross multiple genomes.
+#	It will indicate the presence/absence of blast results from each genome and output 
+#	three files (tab delimited presence/absence in each genome): present_all.csv - 
+#	genes present in all genomes; absent_all.csv - genes absent in all genomes; 
+#	differentials.csv - genes present in some, but not all genomes.
+
+
+#-------------------------------------------------------
+# 		Step 1.		Collect a list of input files; 
+#		Loop through them, splitting them into lists
+#		of queries with hits/no hits and also make a 
+#		list of all query names for differentials file
+#		later.
+#-------------------------------------------------------
+
 
 for INFILE in $@; do
-#	echo "$INFILE"
 	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
 	head -n1 $INFILE | cut -f1 > "$INFILE"_absent.csv
-	head -n1 $INFILE | cut -f1 > "$INFILE"_differentials.csv	
+	head -n1 $INFILE | cut -f1 > presence_"$INFILE".csv	
 	while read line; do
-#	for COL_COL in $(cat $INFILE | cut -f1 | tail -n+2); do
-#	for COL_COL in $(cat $INFILE | cut -f1,1020 | tail -n+2); do
-#		echo "$COL_COL"
-#		LINE= split -p'\t' $line
 		ID=$(printf $line | cut -d' '  -f1)
 		HIT=$(echo $line | cut -d' ' -f1020)
-#		echo "ID is: $ID"
-#		echo "Hit is: $HIT"
 		if [ "$HIT" != "0" ]; then
-#			echo "hit"
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
-			printf "$ID""\t1\n" >> "$INFILE"_differentials.csv
+			printf "$ID""\t1\n" >> presence_"$INFILE".csv
 		else
-#			echo "absent"
 			printf "$ID" >> "$INFILE"_absent.csv
 			printf "\n" >> "$INFILE"_absent.csv
-			printf "$ID""\t0\n" >> "$INFILE"_differentials.csv
+			printf "$ID""\t0\n" >> presence_"$INFILE".csv
 		fi
 	done<$INFILE
 done 
 
+#-------------------------------------------------------
+# 		Step 2.		Combine the total lists together to
+#		make a .csv table of presence/absence of each query
+#-------------------------------------------------------
+
 NUMBER=1
 cut -f1 "$1" > tmp_tab"$NUMBER".csv
-
 for INFILE in $@; do
 	NEXT_NUM=$((NUMBER+1))
-	paste -d '\t' tmp_tab"$NUMBER".csv <(cut -f2 "$INFILE"_differentials.csv) > tmp_tab"$NEXT_NUM".csv
+	paste -d '\t' tmp_tab"$NUMBER".csv <(cut -f2 presence_"$INFILE".csv) > tmp_tab"$NEXT_NUM".csv
 	NUMBER=$((NUMBER+1))
 done
+
+
+#-------------------------------------------------------
+# 		Step 2.		Split the total list into lists of
+#		genes that are present in all genomes, absent 
+#		in all genomes, or are differential.
+#-------------------------------------------------------
+
 mv tmp_tab"$NEXT_NUM".csv presence_tab.csv
 rm tmp_tab*
-
-
-# while read line; do
-# 	if [ $(printf "$line" | grep "\t0\t0\t0\t0") ]; then
-# 		printf "$line""\n" >> absent_all.csv
-# 	elif $(printf "$line" | grep "\t1\t1\t1\t1"); then
-# 		printf "$line""\n" >> present_all.csv
-# 	elif $(printf "$line" | grep "\t?\t?\t?\t?"); then
-# 		printf "$line""\n" >> differentials.csv
-# 	else
-# 		echo "problem line:"
-# 		echo "$line"
-# 	fi	
-# done;<presence_tab.csv
-
 grep -P '\s0\s0\s0\s0' presence_tab.csv > absent_all.csv
 grep -P '\s1\s1\s1\s1' presence_tab.csv > present_all.csv
 grep -vP '\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1' > differentials.csv
+
+
 exit
