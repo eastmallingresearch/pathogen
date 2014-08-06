@@ -1,12 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 16
+#$ -pe smp 8
 #$ -l virtual_free=0.9G
 
 
 # script to run blast homology pipe
-# Usage: blast_pip.sh <query.fa> <genome_sequence.fa> <path_to_blast_pipe.sh>
+USAGE="blast_pip.sh <query.fa> <genome_sequence.fa> <path_to_blast_pipe.sh>"
 
 
 #-------------------------------------------------------
@@ -27,6 +27,15 @@ cd $WORK_DIR
 cp $CUR_PATH/$IN_GENOME $GENOME
 cp $CUR_PATH/$IN_QUERY $QUERY
 OUTNAME="$STRAIN"_"$QUERY"
+
+echo "Running blast_pipe.sh"
+echo "Usage = $USAGE"
+echo "Organism is: $ORGANISM"
+echo "Strain is: $STRAIN"
+echo "Query is: $QUERY"
+echo "Genome is: $GENOME"
+echo "You are running scripts from:"
+echo "$SCRIPT_DIR"
 
 #-------------------------------------------------------
 # 		Step 1.		blast queries against themselves
