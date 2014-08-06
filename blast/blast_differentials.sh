@@ -14,11 +14,11 @@ USAGE="blast_differentials.sh <blast_pipe_outfile.csv> <blast_pipe_outfile.csv> 
 
 echo "$USAGE"
 echo ""
-echo "Have you remembered to edit line 42?"
+echo "Have you remembered to edit line 45?"
 echo "the number of the column which containins the number of hits in <blast_pipe_outfile.csv>?"
 echo "(Edit the number after -f)" 
 echo ""
-echo "Have you remembered to edit the grep expressions on lines 83-85?"
+echo "Have you remembered to edit the grep expressions on lines 87-89?"
 echo '(These require a \s0 and \s1 for each genome you input)'
 
 #-------------------------------------------------------
@@ -28,33 +28,26 @@ echo '(These require a \s0 and \s1 for each genome you input)'
 #		list of all query names for differentials file
 #		later.
 #-------------------------------------------------------
-#
 #	
+#	ESSENTIAL
+#		The column containing the blast hits in the 
+#		<blast_pipe_outfile.csv> must be set. This is
+#		the number after HIT=$(echo $line | cut -d' ' -f
+#		for example if it is in column 4 use -f4
 #
-#
-#NUMBER=0
 
 for INFILE in $@; do
-#	head -n1 $INFILE | cut -f1 > "$INFILE"_present.csv
-#	head -n1 $INFILE | cut -f1 > "$INFILE"_absent.csv
-#	head -n1 $INFILE | cut -f1 > "$INFILE"_presence.csv
 	printf '' > "$INFILE"_present.csv
 	printf '' > "$INFILE"_absent.csv
 	printf '' > "$INFILE"_presence.csv
 	while read line; do
-#		NUMBER=$((NUMBER+1))
 		ID=$(printf $line | cut -d' '  -f1)
 		HIT=$(echo $line | cut -d' ' -f1020)		# Edit this line before running.
-#		echo "$HIT"
-#		if [ "$HIT" = "ID" ]; then
-#			continue
-#		elif [ "$HIT" != "0" ]; then
-		if [ "$HIT" = "1" ]; then
+		if [ "$HIT" >= "1" ]; then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
 			printf "$ID""\t1\n" >> "$INFILE"_presence.csv
 		fi
-#		else
 		if [ "$HIT" = "0" ]; then
 			printf "$ID" >> "$INFILE"_absent.csv
 			printf "\n" >> "$INFILE"_absent.csv
