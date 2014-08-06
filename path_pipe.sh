@@ -17,14 +17,14 @@ WORK_DIR=/tmp/path_pipe
 
 IN_FILE=$1
 
-SCRIPT_DIR=/home/armita/git_repos/emr_repos/pathogen/rxlr
+SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/rxlr
 SIG_P=$CUR_PATH/signalp-2.0/signalp
 
 ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
-mkdir $WORK_DIR
+mkdir -p $WORK_DIR
 cd $WORK_DIR
 cp $CUR_PATH/$IN_FILE $SORTED_CONTIGS
 
@@ -194,9 +194,7 @@ tail -n +2 $STRAIN.mimps.fa | head -n -1 > "$STRAIN"_mimps.fa
 #########################
 
 
-mkdir $CUR_PATH/analysis/rxlr/$ORGANISM
-
-mkdir $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/
+mkdir -p $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/
 
 cp -r $WORK_DIR/. $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/.
 

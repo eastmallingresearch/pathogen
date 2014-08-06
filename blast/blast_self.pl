@@ -31,7 +31,7 @@ my %outline_hash;
 #-------------------------------------------------------
 # 		Step 2.		Create BLAST factory
 #-------------------------------------------------------
-
+#print "BLAST FACTORY of $query_file\n";
 $blast_fac = Bio::Tools::Run::StandAloneBlastPlus->new(
 												'-db_name' => 'query_db', 
 												'-db_dir' => '.', 
@@ -40,8 +40,9 @@ $blast_fac = Bio::Tools::Run::StandAloneBlastPlus->new(
 												'-db_data' => $query_file,
 												'-no_throw_on_crash' => 1,
 												);
+#print "MAKE DB \n";
 $blast_fac->make_db;												
-
+#exit;
 #-------------------------------------------------------
 # 		Step 3.		Collect sequence names from input
 #------------------------------------------------------- 
