@@ -42,8 +42,8 @@ for INFILE in $@; do
 	printf '' > "$INFILE"_presence.csv
 	while read line; do
 		ID=$(printf $line | cut -d' '  -f1)
-		HIT=$(echo $line | cut -d' ' -f1020)		# Edit this line before running.
-		if [ "$HIT" >= "1" ]; then
+		HIT=$(echo $line | cut -d' ' -f1123)		# Edit this line before running.
+		if (( "$HIT" >= "1" )); then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
 			printf "$ID""\t1\n" >> "$INFILE"_presence.csv
@@ -84,9 +84,9 @@ done
 
 mv tmp_tab"$NEXT_NUM".csv presence_tab.csv
 rm tmp_tab*
-grep -P '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
-grep -P '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
-grep -vP '\s0\s0\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
+grep -P '\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
+grep -P '\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
+grep -vP '\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
 
 
 exit
