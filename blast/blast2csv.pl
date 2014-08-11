@@ -57,7 +57,7 @@ my $input_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => 'fasta', '-
  
 while (my $seq = $input_obj->next_seq) {
 
-	$report_obj = $blast_fac->run('-method' => 'tblastn', '-query' => $seq, '-method_args' => ['-evalue' => 1e-40]);
+	$report_obj = $blast_fac->run('-method' => 'tblastn', '-query' => $seq, '-method_args' => ['-evalue' => 1e-10]);
 	my @ao_hits = $report_obj->hits;
 
 #-------------------------------------------------------
