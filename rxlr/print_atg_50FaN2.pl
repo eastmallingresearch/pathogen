@@ -8,9 +8,13 @@ use warnings;
 #
 #
 #
-# Usage: ./print_atg_50.pl input_fasta_file > output_file
+# Usage: ./print_atg_50.pl <input_fasta_file> direction <aa_outfile> <nucleotide_outfile>
 #
 # Written by Joe Win, Kamoun lab, OSU-OARDC
+#
+#	11/08/14
+#	Modified by Andrew Armitage, East Malling Research to extract predicted
+#	nucleotide sequence in addition to aa's
 #
 #--------------------------------------------------------------------------
 
@@ -46,7 +50,11 @@ my $tempSeq = "";
 my @sequences;
 my $input = shift;
 my $direction = shift;
+my $aa_out = shift;
+my $nuc_out = shift;
 open(INP, $input) || die "Cannot open file \"$input\"\n\n";
+open(AA_OUT, ">$aa_out") || die "Cannot create file \"$aa_out\"\n\n";
+open(NUC_OUT, ">$nuc_out") || die "Cannot create file \"$nuc_out\"\n\n";
 
 while (<INP>) {
     chomp;
@@ -100,10 +108,12 @@ sub print_atg_50 {
 		if ($seq_length < 210) {		
 			last;
 		}
-		my $peptide = translate_from_atg($this_frame);
+		my ($peptide, $nuc) = translate_from_atg($this_frame);
 		if (length($peptide) >= 50) {
-			print "$this_header","_","$direction","$frame","\n";
-			print "$peptide\n";
+			print AA_OUT "$this_header","_","$direction","$frame","\n";
+			print AA_OUT "$peptide\n";
+			print NUC_OUT "$this_header","_","$direction","$frame","\n";
+			print NUC_OUT "$nuc\n";
 			$thisSeq = substr($this_frame, 3);
 			$frame++;
 		} else {
@@ -113,21 +123,25 @@ sub print_atg_50 {
 	return;
 }
 
-#--------------------------------------------------------------------------
-
-sub translate_from_atg {
-	my $this_seq = shift;
-	$this_seq =~ tr/[a-z]/[A-Z]/;
-	my $pept;
-	for (my $y = 0; $y < (length($this_seq) - 3); $y += 3) {
-		if (!defined $DNAtoAA{substr($this_seq, $y, 3)}) {
-			$pept .= "X";
-		} else {
-			$pept .= $DNAtoAA{substr($this_seq, $y, 3)};
-			if ($DNAtoAA{substr($this_seq, $y, 3)} eq "Z") {last}
-		}
-	}
-	return $pept;
+# #--------------------------------------------------------------------------
+# 
+ sub translate_from_atg {
+ 	my $this_seq = shift;
+ 	$this_seq =~ tr/[a-z]/[A-Z]/;
+ 	my $pept;
+ 	my $nuc;
+ 	for (my $y = 0; $y < (length($this_seq) - 3); $y += 3) {
+ 		my $cur_codon = substr($this_seq, $y, 3);
+ 		if (!defined $DNAtoAA{$cur_codon}) {
+ 			$pept .= "X";
+ 			$nuc .= $cur_codon;
+ 		} else {
+ 			if ($DNAtoAA{$cur_codon} eq "Z") {last}
+ 			$pept .= $DNAtoAA{$cur_codon};
+			$nuc .= $cur_codon;
+ 		}
+ 	}
+ 	return ("$pept", "$nuc");
 }
-
-#--------------------------------------------------------------------------
+# 
+# #--------------------------------------------------------------------------
