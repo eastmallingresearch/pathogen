@@ -1,12 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 8
+#$ -pe smp 1
 #$ -l virtual_free=0.9G
 
 
 # script to run blast homology pipe
-USAGE="blast_pip.sh <query.fa> <genome_sequence.fa> <path_to_blast_pipe.sh>"
+USAGE="blast_pipe.sh <query.fa> <dna, protein (query_format)> <genome_sequence.fa> <path_to_blast_pipe.sh>"
 
 
 #-------------------------------------------------------
@@ -14,8 +14,9 @@ USAGE="blast_pip.sh <query.fa> <genome_sequence.fa> <path_to_blast_pipe.sh>"
 #-------------------------------------------------------
 
 IN_QUERY=$1
-IN_GENOME=$2
-if [ "$3" ]; then SCRIPT_DIR=$3; else SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/blast; fi
+QUERY_FORMAT=$2
+IN_GENOME=$3
+if [ "$4" ]; then SCRIPT_DIR=$3; else SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/blast; fi
 ORGANISM=$(echo $IN_GENOME | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
 QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
@@ -33,15 +34,26 @@ echo "Usage = $USAGE"
 echo "Organism is: $ORGANISM"
 echo "Strain is: $STRAIN"
 echo "Query is: $QUERY"
+echo "This is $QUERY_FORMAT data"
 echo "Genome is: $GENOME"
 echo "You are running scripts from:"
 echo "$SCRIPT_DIR"
+
+if test "$QUERY_FORMAT" = 'protein'; then
+	SELF_BLAST_TYPE='blastp'
+	BLAST_CSV_TYPE='tblastn'
+elif test "$QUERY_FORMAT" = 'dna'; then
+	SELF_BLAST_TYPE='blastn'
+	BLAST_CSV_TYPE='blastn'
+else exit
+fi
+
 
 #-------------------------------------------------------
 # 		Step 1.		blast queries against themselves
 #-------------------------------------------------------
 
-$SCRIPT_DIR/blast_self.pl $QUERY > "$QUERY"_self.csv
+$SCRIPT_DIR/blast_self.pl $QUERY $SELF_BLAST_TYPE > "$QUERY"_self.csv
 
 #-------------------------------------------------------
 # 		Step 2.		simplify hits table into homolog groups
@@ -53,7 +65,7 @@ $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
 # 		Step 3.		blast queries against genome
 #-------------------------------------------------------
 
-$SCRIPT_DIR/blast2csv.pl $QUERY $GENOME 5 > "$OUTNAME"_hits.csv
+$SCRIPT_DIR/blast2csv.pl $QUERY $BLAST_CSV_TYPE $GENOME 5 > "$OUTNAME"_hits.csv
 
 #-------------------------------------------------------
 # 		Step 4.		combine the homolog group table
