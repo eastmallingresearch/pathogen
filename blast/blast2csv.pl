@@ -7,8 +7,9 @@ use Bio::Search::Result::BlastResult;
 # Perform a tBlASTn search of query genes against a file containing nucleotide data. It will then parse the results 
 # into a tab separated output
 
-my $usage = "blast2csv.pl <query_file.fa> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
+my $usage = "blast2csv.pl <query_file.fa> <blastn/tblastn> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
 my $query_file = shift or die $usage;
+my $blast_type = shift or die $usage;
 my $database = shift or die $usage;
 my $no_hits = shift or die $usage;
 my $blast_fac;
@@ -16,6 +17,11 @@ my $result_obj;
 my $report_obj;
 my @ao_outlines;
 my $seq_obj;
+my $method; 
+my $alphabet;
+
+if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'tblastn') {$alphabet = 'protein'} else {die "$usage"}
+
 
 #-------------------------------------------------------
 # 		Step 1.		Set outfile header
@@ -49,7 +55,7 @@ $blast_fac->make_db;
 # 		Step 3.		Open query file
 #------------------------------------------------------- 
 
-my $input_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => 'fasta', '-alphabet' => 'dna' );
+my $input_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => 'fasta', '-alphabet' => $alphabet);
 
 #-------------------------------------------------------
 # 		Step 4.		Perform blast for each query
@@ -57,7 +63,7 @@ my $input_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => 'fasta', '-
  
 while (my $seq = $input_obj->next_seq) {
 
-	$report_obj = $blast_fac->run('-method' => 'tblastn', '-query' => $seq, '-method_args' => ['-evalue' => 1e-10]);
+	$report_obj = $blast_fac->run('-method' => $blast_type, '-query' => $seq, '-method_args' => ['-evalue' => 1e-10]);
 	my @ao_hits = $report_obj->hits;
 
 #-------------------------------------------------------

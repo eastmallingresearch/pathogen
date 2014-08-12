@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 16
+#$ -pe smp 8
 #$ -l virtual_free=0.9G
 #$ -M andrew.armitage@emr.ac.uk
 #$ -m abe
@@ -12,8 +12,6 @@
 # Initialise values		#
 #########################
 
-CUR_PATH=$PWD
-WORK_DIR=/tmp/path_pipe
 
 IN_FILE=$1
 
@@ -23,6 +21,10 @@ SIG_P=$CUR_PATH/signalp-2.0/signalp
 ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
+
+
+CUR_PATH=$PWD
+WORK_DIR=/tmp/path_pipe_"$STRAIN"
 
 mkdir -p $WORK_DIR
 cd $WORK_DIR
@@ -59,7 +61,7 @@ echo $SCRIPT_DIR
 
 echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F "$STRAIN"_atg.fa "$STRAIN"atg_nuc.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F "$STRAIN"_F_atg.fa "$STRAIN"_F_atg_nuc.fa
 
 	#######  Step 1b ########
 	# revcomp contigs to get#
@@ -81,7 +83,7 @@ $SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS > contigs_R.fa
 	
 	
 echo "Predicting coding seqs- reverse"
-$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R > "$STRAIN"_R_atg.fa "$STRAIN"atg_R_nuc.fa
+$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R "$STRAIN"_R_atg.fa "$STRAIN"_R_atg_nuc.fa
 
  
 	#######  Step 1d ########
@@ -90,8 +92,8 @@ $SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R > "$STRAIN"_R_atg.fa "$STRAIN"atg
 	#########################
 
 echo "Joining Forward and Reverse Files"
-cat "$STRAIN"_atg.fa "$STRAIN"_atg_R.fa > $STRAIN.aa_cat.fa
-cat "$STRAIN"_atg_nuc.fa "$STRAIN"_atg_R_nuc.fa > "$STRAIN"_nuc.fa
+cat "$STRAIN"_F_atg.fa "$STRAIN"_R_atg.fa > $STRAIN.aa_cat.fa
+cat "$STRAIN"_F_atg_nuc.fa "$STRAIN"_R_atg_nuc.fa > "$STRAIN"_nuc.fa
 
 	#######  Step 1e ########
 	# 		Cleanup			#
