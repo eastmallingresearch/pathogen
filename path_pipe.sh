@@ -12,7 +12,7 @@
 # Initialise values		#
 #########################
 
-
+CUR_PATH=$PWD
 IN_FILE=$1
 
 SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/rxlr
@@ -22,8 +22,6 @@ ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
-
-CUR_PATH=$PWD
 WORK_DIR=/tmp/path_pipe_"$STRAIN"
 
 mkdir -p $WORK_DIR
@@ -193,7 +191,28 @@ tail -n +2 $STRAIN.mimps.fa | head -n -1 > "$STRAIN"_mimps.fa
 
 #########################################################################
 
+
 #######  Step 4	 ########
+# Pull out nucleotide 	#
+# sequence containting 
+# 	rxlr/mimps			#
+#########################
+
+grep '>' "$STRAIN"_sp_rxlr.fa | cut -f1 > id_tmp.txt
+printf "" > "$STRAIN"_sp_rxlr_nuc.fa
+while read line; do
+	grep -A1 "$line" "$STRAIN"atg_nuc.fa >> "$STRAIN"_sp_rxlr_nuc.fa
+done<$id_tmp.txt
+rm id_tmp.txt
+
+grep '>' "$STRAIN".mimps.fa | cut -f1 > id_tmp.txt
+printf "" > "$STRAIN"_mimps_nuc.fa
+while read line; do
+	grep -A1 "$line" "$STRAIN"atg_nuc.fa >> "$STRAIN"_mimps_nuc.fa
+done<id_tmp.txt
+rm id_tmp.txt
+
+#######  Step 5	 ########
 # 		Cleanup			#
 #########################
 

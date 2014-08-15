@@ -46,7 +46,7 @@ $blast_fac->make_db;
 #-------------------------------------------------------
 # 		Step 3.		Collect sequence names from input
 #------------------------------------------------------- 
-if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'blastp') {$alphabet = 'dna'} else {die "$usage"}
+if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'blastp') {$alphabet = 'protein'} else {die "$usage"}
 my $seq_obj = Bio::SeqIO->new('-file' => $query_file, '-format' => "fasta", '-alphabet' => $alphabet );
 
 while (my $seq = $seq_obj->next_seq) {push @ao_seqs, $seq};

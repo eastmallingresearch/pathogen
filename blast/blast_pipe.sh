@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 1
+#$ -pe smp 8
 #$ -l virtual_free=0.9G
 
 
