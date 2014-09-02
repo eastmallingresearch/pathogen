@@ -63,13 +63,9 @@ foreach (@infiles) {
 				$iteration ++;
 			}				
 		} elsif ("$hit" >= 1 && $per_length && "$per_length" >= 0.5) {		
-#			print PRESENT_OUT "$id\n";
-#			print PRESENCE_OUT "$id\t0\n";
 			$out_hash{"$id"} .= "1\t";
 		} else {
 			chomp $hit;
-#			print ABSENT_OUT "$id\n";
-#			print PRESENCE_OUT "$id\t0\n";
 			$out_hash{"$id"} .= "0\t";
 		}
 	}
@@ -95,7 +91,7 @@ my $absence_str = "0";
 foreach ( 1 .. $#infiles ) { $presence_str .= '\t1'; $absence_str .= '\t0'; }
 foreach (keys %out_hash) {
 	$cur_line = $out_hash{$_};
-	print PRESENCE_TAB "$_: $cur_line\n";
+	print PRESENCE_TAB "$_:\t$cur_line\n";
 	if ($cur_line =~ m/$presence_str/) {
 		print PRESENT_ALL "$_\t$cur_line\n";
 	} elsif ($cur_line =~ m/$absence_str/) {
