@@ -42,7 +42,7 @@ for INFILE in $@; do
 	printf '' > "$INFILE"_presence.csv
 	while read line; do
 		ID=$(printf $line | cut -d' '  -f1)
-		HIT=$(echo $line | cut -d' ' -f1124)		# Edit this line before running.
+		HIT=$(echo $line | cut -d' ' -f1120)		# Edit this line before running.
 		if [ "$HIT" -ge "1" ]; then
 			printf "$ID" >> "$INFILE"_present.csv
 			printf "\n" >> "$INFILE"_present.csv
@@ -86,9 +86,9 @@ done
 
 mv tmp_tab"$NEXT_NUM".csv presence_tab.csv
 rm tmp_tab*
-grep -P '\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
-grep -P '\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
-grep -vP '\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1' > differentials.csv	# Edit this line before running
+grep -P '\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv > absent_all.csv		# Edit this line before running
+grep -P '\s1\s1\s1\s1\s1\s1\s1\s1' presence_tab.csv > present_all.csv		# Edit this line before running
+grep -vP '\s0\s0\s0\s0\s0\s0\s0\s0' presence_tab.csv | grep -vP '\s1\s1\s1\s1\s1\s1\s1\s1' > differentials.csv	# Edit this line before running
 
 
 exit
