@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 8
+#$ -pe smp 1
 #$ -l virtual_free=0.9G
 
 
@@ -44,7 +44,7 @@ if test "$QUERY_FORMAT" = 'protein'; then
 	BLAST_CSV_TYPE='tblastn'
 elif test "$QUERY_FORMAT" = 'dna'; then
 	SELF_BLAST_TYPE='blastn'
-	BLAST_CSV_TYPE='blastn'
+	BLAST_CSV_TYPE='tblastx'
 else exit
 fi
 
