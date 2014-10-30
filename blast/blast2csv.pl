@@ -7,7 +7,7 @@ use Bio::Search::Result::BlastResult;
 # Perform a tBlASTn search of query genes against a file containing nucleotide data. It will then parse the results 
 # into a tab separated output
 
-my $usage = "blast2csv.pl <query_file.fa> <blastn/tblastn> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
+my $usage = "blast2csv.pl <query_file.fa> <blastn/tblastn/tblastx> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
 my $query_file = shift or die $usage;
 my $blast_type = shift or die $usage;
 my $database = shift or die $usage;
@@ -20,7 +20,7 @@ my $seq_obj;
 my $method; 
 my $alphabet;
 
-if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'tblastn') {$alphabet = 'protein'} else {die "$usage"}
+if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'tblastn') {$alphabet = 'protein'} elsif ($blast_type eq 'tblastx') {$alphabet = 'dna'} else {die "$usage"}
 
 
 #-------------------------------------------------------
@@ -29,7 +29,7 @@ if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'tblastn'
 
 my $outline_header = "ID\tSequence\tSequence_lgth\tNo.hits";
 for (1 .. $no_hits) { 
-	print "$_";	
+#	print "$_";	
 	$outline_header .= "\tHit\tE-value\tHit_lgth\tPer_length\tPer_ID\tHit_strand\tHit_start\tHit_end\tHit_seq";
 }
 $outline_header .= "\n";
@@ -97,9 +97,11 @@ while (my $seq = $input_obj->next_seq) {
  		$hit_id = substr $hit->name(), 4;
 		$hit_seq = $hsp->seq_str('hit'); 	
  		$hit_lgth = length ($hit_seq);
+ 		if ($blast_type eq 'tblastx') { $hit_lgth = ($hit_lgth * 3); }
  		$per_query = ($hit_lgth / $query_lgth);
  		$per_query = substr $per_query, 0, 4;
-		$per_id = ($hsp->num_identical() / $query_lgth);
+		if ($blast_type eq 'tblastx') { $per_id = ($hsp->num_identical() / ($query_lgth / 3));
+		} else { $per_id = ($hsp->num_identical() / $query_lgth); }
 		$per_id = substr $per_id, 0, 4;
 		$e_value = $hsp->evalue;
 		$strand = $hsp->strand('hit');
