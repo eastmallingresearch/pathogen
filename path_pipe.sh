@@ -22,7 +22,7 @@ ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
-WORK_DIR=/tmp/path_pipe_"$STRAIN"
+WORK_DIR=TMPDIR/path_pipe_"$STRAIN"
 
 mkdir -p $WORK_DIR
 cd $WORK_DIR
@@ -221,6 +221,6 @@ mkdir -p $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/
 
 cp -r $WORK_DIR/. $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/.
 
-rm -r $WORK_DIR/
+rm -r $TMPDIR
 
 
