@@ -3,6 +3,10 @@ use strict;
 use warnings;
 use Bio::SeqIO;
 
+#-------------------------------------------------------
+# Step 0. Initialise values
+#-------------------------------------------------------
+
 my $infile;
 my $motif_name;
 my $seqio_obj;
@@ -15,17 +19,25 @@ my $this_seq;
 my @sub_return = '2';
 my %outhash;
 my $usage="find_crinkler.pl <gene_models.fa> [query_motif1] [query_motif2] [query_motifx]";
-
-# Run this search for multiple motifs before identifying loci that carry all of these motifs using :
-# cat findmotif_RXLR.fa findmotif_LVHLQ.fa | grep '>' | cut -f1 | sort | uniq -d | less
-
 $infile = shift or die("Usage: $usage $!");
-$seqio_obj = Bio::SeqIO->new(-file=>"$infile", -format => "fasta" -alphabet => 'dna' );
-
 my @ao_motif = @ARGV;
-print "@ao_motif\n";
 
+
+#-------------------------------------------------------
+# Step 1. Main Program: for each sequence in fasta file
+#			perform a search for the presence of each 
+#			of the supplied motifs. Store the hits in
+#			an hash, which will printed to an outfile
+#			for each motif.
+#-------------------------------------------------------
+# Run this search for multiple motifs before identifying 
+# loci that carry all of these motifs using :
+# cat findmotif_RXLR.fa findmotif_LVHLQ.fa | grep '>' |
+# 				cut -f1 | sort | uniq -d | less
+
+print "Searching for the following motifs: @ao_motif\n";
 $outhash{@ao_motif} = '';
+$seqio_obj = Bio::SeqIO->new(-file=>"$infile", -format => "fasta" -alphabet => 'dna' );
 
 while ($nuc_seq_obj = $seqio_obj->next_seq){
 	my $id = $nuc_seq_obj->id;
@@ -46,6 +58,8 @@ for (@ao_motif) {
 
 exit;
 
+#-------------------------------------------------------
+# Subroutines
 #-------------------------------------------------------
 
 sub motif_search {
@@ -72,9 +86,10 @@ sub build_outhash {
 	my $motif_end = shift @_;
 	my %outhash = @_;
 	$motif =~ tr /./x/;
-	my $id = $nuc_seq_obj->id;
+	my $id = $nuc_seq_obj->id;	
+	my $description = $nuc_seq_obj->description;
 	my $seq = $nuc_seq_obj->seq;
-	my $outstring = ">"."$id\t-feature_at: $motif_start\n$seq\n";
+	my $outstring = ">"."$id $description\t-feature_at: $motif_start\n$seq\n";
 	$outhash{"$motif"} .= $outstring;
 	return (%outhash);
 }
