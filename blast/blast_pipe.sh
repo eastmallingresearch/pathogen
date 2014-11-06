@@ -45,6 +45,7 @@ if test "$QUERY_FORMAT" = 'protein'; then
 elif test "$QUERY_FORMAT" = 'dna'; then
 	SELF_BLAST_TYPE='blastn'
 	BLAST_CSV_TYPE='tblastx'
+#	BLAST_CSV_TYPE='blastn'
 else exit
 fi
 
