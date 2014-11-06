@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
-#$ -pe smp 8
+#$ -pe smp 1
 #$ -l virtual_free=0.9G
 #$ -M andrew.armitage@emr.ac.uk
 #$ -m abe
@@ -22,7 +22,7 @@ ORGANISM=$(echo $IN_FILE | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_FILE | rev | cut -d "/" -f3 | rev)
 SORTED_CONTIGS=$(echo $IN_FILE | rev | cut -d "/" -f1 | rev)
 
-WORK_DIR=TMPDIR/path_pipe_"$STRAIN"
+WORK_DIR=$TMPDIR/path_pipe_"$STRAIN"
 
 mkdir -p $WORK_DIR
 cd $WORK_DIR
@@ -59,7 +59,7 @@ echo $SCRIPT_DIR
 
 echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-$SCRIPT_DIR/print_atg_50FaN2.pl $SORTED_CONTIGS F "$STRAIN"_F_atg.fa "$STRAIN"_F_atg_nuc.fa
+/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl $SORTED_CONTIGS F "$STRAIN"_F_atg.fa "$STRAIN"_F_atg_nuc.fa
 
 	#######  Step 1b ########
 	# revcomp contigs to get#
@@ -81,7 +81,7 @@ $SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS > contigs_R.fa
 	
 	
 echo "Predicting coding seqs- reverse"
-$SCRIPT_DIR/print_atg_50FaN2.pl contigs_R.fa R "$STRAIN"_R_atg.fa "$STRAIN"_R_atg_nuc.fa
+/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl contigs_R.fa R "$STRAIN"_R_atg.fa "$STRAIN"_R_atg_nuc.fa
 
  
 	#######  Step 1d ########
@@ -202,7 +202,7 @@ grep '>' "$STRAIN"_sp_rxlr.fa | cut -f1 > id_tmp.txt
 printf "" > "$STRAIN"_sp_rxlr_nuc.fa
 while read line; do
 	grep -A1 "$line" "$STRAIN"_nuc.fa >> "$STRAIN"_sp_rxlr_nuc.fa
-done<$id_tmp.txt
+done<id_tmp.txt
 rm id_tmp.txt
 
 grep '>' "$STRAIN".mimps.fa | cut -f1 > id_tmp.txt
