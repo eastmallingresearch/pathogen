@@ -59,7 +59,7 @@ echo $SCRIPT_DIR
 
 echo "RxLR pipeline- input your sorted contigs as your first argument and the path to signalp2 as your second argument"
 echo "Predicting coding seqs- forward"
-/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl $SORTED_CONTIGS F "$STRAIN"_F_atg.fa "$STRAIN"_F_atg_nuc.fa
+/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl $SORTED_CONTIGS F "$STRAIN"_F_atg.fa "$STRAIN"_F_atg_nuc.fa "$STRAIN"_F_atg_ORF.gff
 
 	#######  Step 1b ########
 	# revcomp contigs to get#
@@ -81,7 +81,7 @@ $SCRIPT_DIR/revcomp_fasta.pl $SORTED_CONTIGS > contigs_R.fa
 	
 	
 echo "Predicting coding seqs- reverse"
-/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl contigs_R.fa R "$STRAIN"_R_atg.fa "$STRAIN"_R_atg_nuc.fa
+/home/armita/git_repos/emr_repos/scripts/phytophthora/pathogen/rxlr/print_atg_gff.pl contigs_R.fa R "$STRAIN"_R_atg.fa "$STRAIN"_R_atg_nuc.fa "$STRAIN"_R_atg_ORF.gff
 
  
 	#######  Step 1d ########
@@ -92,6 +92,7 @@ echo "Predicting coding seqs- reverse"
 echo "Joining Forward and Reverse Files"
 cat "$STRAIN"_F_atg.fa "$STRAIN"_R_atg.fa > $STRAIN.aa_cat.fa
 cat "$STRAIN"_F_atg_nuc.fa "$STRAIN"_R_atg_nuc.fa > "$STRAIN"_nuc.fa
+cat "$STRAIN"_F_atg_ORF.gff "$STRAIN"_R_atg_ORF.gff > "$STRAIN"_ORF.gff
 
 	#######  Step 1e ########
 	# 		Cleanup			#
