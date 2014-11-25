@@ -49,7 +49,7 @@ sub build_gene_hash {
 			if ($cur_line =~ m/$search_seq/) { 
 				$hit_lines = $`;
 				@ao_hit_line = split ("\t", $hit_lines);
-				$hit_orthogroups .= $ao_hit_line[1];
+				$hit_orthogroups .= $ao_hit_line[0];
 				}
 		}
 		if ($hit_orthogroups eq '') {$hit_orthogroups = '-'};	
