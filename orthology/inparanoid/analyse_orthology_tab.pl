@@ -1,11 +1,11 @@
 #!/usr/bin/perl
-#analyse orthology tab
 use strict;
 use warnings;
 
+#-----------------------------------------------------
+# Initialise variables
+#-----------------------------------------------------
 my $usage = "analyse_orthology_tab.pl <orthology_table.csv> [optional: -file list_of_genes.txt -deep]/n";
-
-
 my $in_tab = shift or die $usage;
 my $manual_input = 'Yes';
 my $deep_search = 'No';
@@ -19,10 +19,16 @@ foreach (@ARGV) {
 		$deep_search = 'Yes';
 	}
 }
-	
-build_hash ($in_tab);
+
+#-----------------------------------------------------
+#	Build hash table from input table
+#-----------------------------------------------------
+#build_hash ($in_tab);
 my %orthology_hash = build_hash ($in_tab);
 
+#-----------------------------------------------------
+#	Search hash table for orthologs to query genes
+#-----------------------------------------------------
 if ($manual_input eq 'Yes') {
 	my $search_again = 'y';
 	while ($search_again eq 'y') {
@@ -31,11 +37,6 @@ if ($manual_input eq 'Yes') {
 } elsif ($manual_input eq 'No') {
 	from_file ($gene_file, $deep_search, %orthology_hash);
 }
-	
-
-# for my $key ( keys %orthology_hash ) {
-#    print "$key\t", join("\t", @{$orthology_hash{$key}}), "\n";
-# }
 
 exit;
 
@@ -44,10 +45,11 @@ exit;
 #-----------------------------------------------------
 #		subroutines
 #-----------------------------------------------------
-#
-#	Building the initial hash
-#
 
+
+#-----------------------------------------------------
+#	Building the initial hash
+#-----------------------------------------------------
 sub build_hash {
 	my ($infile) = @_;
 	open (INFILE, $infile); 
@@ -65,7 +67,8 @@ sub build_hash {
  }
 
 #-----------------------------------------------------
-#	Querying for a gene
+#	Collect genes to search for from manual input
+#-----------------------------------------------------
 sub manual_search {
 	my ($deep_search) = shift @_;
 	my (%orthology_hash) = @_;
@@ -92,9 +95,9 @@ sub manual_search {
 	return $search_again;
 }
 
-
 #-----------------------------------------------------
-# collect a list of genes to search for from a file.
+# Collect a list of genes to search for from a file.
+#-----------------------------------------------------
 sub from_file {
 	my ($gene_file) = shift @_;
 	my ($deep_search) = shift @_;
@@ -108,11 +111,9 @@ sub from_file {
 		}
 }
 
-
-	
 #-----------------------------------------------------
 # search for orthologous genes to the query
-
+#-----------------------------------------------------
 sub ortholog_search {
 	my ($search_name) = shift @_;
 	my ($deep_search) = shift @_;
@@ -156,35 +157,35 @@ sub ortholog_search {
 	return %out_hash;
 }
 
-#-----------------------------------------------------
-# search for orthologs of the orthologs
-
-sub deep_search {
-	my ($search_name) = shift @_;
-	my (%orthology_hash) = shift @_;
-	my (%out_hash) = shift @_;
-	my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
-	for my $key ( keys %orthology_hash ) {
-		my @cur_line = @{$orthology_hash{$key}};
-		my @remaining_elements = @cur_line;
-		foreach (@ortholog_groups) {
-			my $this_ortholog = $_;
-			if ($this_ortholog ne '-' && $this_ortholog eq shift @remaining_elements) {
-				if (exists ($out_hash{$key})) {
-				} else {
-					push @{ $out_hash{$key} }, @cur_line;
-				}
-				last;
-			} 
-		}
-	}
-	return %out_hash;
-}
-
+# #-----------------------------------------------------
+# # search for orthologs of the orthologs
+# #-----------------------------------------------------
+# sub deep_search {
+# 	my ($search_name) = shift @_;
+# 	my (%orthology_hash) = shift @_;
+# 	my (%out_hash) = shift @_;
+# 	my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
+# 	for my $key ( keys %orthology_hash ) {
+# 		my @cur_line = @{$orthology_hash{$key}};
+# 		my @remaining_elements = @cur_line;
+# 		foreach (@ortholog_groups) {
+# 			my $this_ortholog = $_;
+# 			if ($this_ortholog ne '-' && $this_ortholog eq shift @remaining_elements) {
+# 				if (exists ($out_hash{$key})) {
+# 				} else {
+# 					push @{ $out_hash{$key} }, @cur_line;
+# 				}
+# 				last;
+# 			} 
+# 		}
+# 	}
+# 	return %out_hash;
+# }
+# 
 
 #-----------------------------------------------------
 #	print output
-	
+#-----------------------------------------------------	
 sub sub_print {
 		my ($search_name) = shift @_;
 		my (%out_hash) = @_;
@@ -194,7 +195,6 @@ sub sub_print {
 		for my $key ( keys %out_hash ) {
     		print OUTFILE join("\t",$key, @{$out_hash{$key}}), "\n";
 		}
-#		print OUTFILE "$print_out";
 		close OUTFILE;
 }
 
