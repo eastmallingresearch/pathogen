@@ -145,7 +145,8 @@ sub ortholog_search {
 		my @remaining_elements = @cur_line;
 		foreach (@ortholog_groups) {
 			my $this_ortholog = $_;
-			if ($this_ortholog ne '-' && $this_ortholog eq shift @remaining_elements) {
+			my $orthology_value = shift @remaining_elements;
+			if ($this_ortholog ne '-' && $this_ortholog eq "$orthology_value") {
 				if (exists ($out_hash{$key})) {
 				} else {
 					push @{ $out_hash{$key} }, @cur_line;
@@ -163,7 +164,8 @@ sub ortholog_search {
 				my @remaining_elements = @cur_line;
 				foreach (@ortholog_groups) {
 					my $this_ortholog = $_;
-					if ($this_ortholog ne '-' && $this_ortholog eq shift @remaining_elements) {
+					my $orthology_value = shift @remaining_elements;
+					if ($this_ortholog ne '-' && $this_ortholog eq "$orthology_value") {
 						if (exists ($out_hash{$key})) {
 						} else {
 							push @{ $out_hash{$key} }, @cur_line;
