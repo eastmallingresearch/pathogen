@@ -5,25 +5,35 @@ use warnings;
 #-----------------------------------------------------
 # Initialise variables
 #-----------------------------------------------------
-my $usage = "analyse_orthology_tab.pl <orthology_table.csv> [optional: -file list_of_genes.txt -deep]/n";
+my $usage = "analyse_orthology_tab.pl <orthology_table.csv> [optional: -file list_of_genes.txt -deep -print_once]/n";
 my $in_tab = shift or die $usage;
 my $manual_input = 'Yes';
 my $deep_search = 'No';
+my $print_once = 'No';
 my $gene_file;
-foreach (@ARGV) {
-	my $cur_element = shift @ARGV;
-	if ($cur_element eq '-file') {
+while (@ARGV) {
+	if ($ARGV[0] eq '-file') {
+		shift;
 		$manual_input = 'No'; 
 		$gene_file = shift @ARGV;
-	} elsif ($cur_element eq '-deep') {
+		print "file found: $gene_file\n";
+	} elsif ($ARGV[0] eq '-deep') {
+		shift;
 		$deep_search = 'Yes';
+		print "Deep searching\n";
+	} elsif ($ARGV[0] eq '-print_once') {
+		shift;
+		$print_once = 'Yes';
+		print "Printing each value once\n";
+	} else {
+		print "Error: Please adhere to usage:\n$usage"; 
+		exit;
 	}
 }
 
 #-----------------------------------------------------
 #	Build hash table from input table
 #-----------------------------------------------------
-#build_hash ($in_tab);
 my %orthology_hash = build_hash ($in_tab);
 
 #-----------------------------------------------------
@@ -35,7 +45,7 @@ if ($manual_input eq 'Yes') {
 		$search_again = manual_search ($deep_search, %orthology_hash);
 	}
 } elsif ($manual_input eq 'No') {
-	from_file ($gene_file, $deep_search, %orthology_hash);
+	from_file ($gene_file, $deep_search, $print_once, %orthology_hash);
 }
 
 exit;
@@ -99,15 +109,25 @@ sub manual_search {
 # Collect a list of genes to search for from a file.
 #-----------------------------------------------------
 sub from_file {
+	my %used_hash;
 	my ($gene_file) = shift @_;
 	my ($deep_search) = shift @_;
+	my ($print_once) = shift @_;
 	my (%orthology_hash) = @_;
 	open INGENES, $gene_file;
 		while (<INGENES>) {
 			my $search_name = $_;
 			chomp $search_name;
+			if ($print_once eq 'Yes') { 
+				if (exists ($used_hash{$search_name})) { next; }
+			}
 			my %out_hash = ortholog_search ($search_name, $deep_search, %orthology_hash);
-			sub_print ($search_name, %out_hash)
+			if ($print_once eq 'Yes') { 
+				for my $key ( keys %out_hash ) {
+    				push @{ $used_hash{$key} }, '1\t';
+				}
+			}
+			sub_print ($search_name, %out_hash);
 		}
 }
 
@@ -156,32 +176,6 @@ sub ortholog_search {
 	}
 	return %out_hash;
 }
-
-# #-----------------------------------------------------
-# # search for orthologs of the orthologs
-# #-----------------------------------------------------
-# sub deep_search {
-# 	my ($search_name) = shift @_;
-# 	my (%orthology_hash) = shift @_;
-# 	my (%out_hash) = shift @_;
-# 	my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
-# 	for my $key ( keys %orthology_hash ) {
-# 		my @cur_line = @{$orthology_hash{$key}};
-# 		my @remaining_elements = @cur_line;
-# 		foreach (@ortholog_groups) {
-# 			my $this_ortholog = $_;
-# 			if ($this_ortholog ne '-' && $this_ortholog eq shift @remaining_elements) {
-# 				if (exists ($out_hash{$key})) {
-# 				} else {
-# 					push @{ $out_hash{$key} }, @cur_line;
-# 				}
-# 				last;
-# 			} 
-# 		}
-# 	}
-# 	return %out_hash;
-# }
-# 
 
 #-----------------------------------------------------
 #	print output
