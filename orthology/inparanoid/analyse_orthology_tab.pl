@@ -156,22 +156,24 @@ sub ortholog_search {
 		}
 	}
 	if ($deep_search eq 'Yes') {
-	#This does a second round of searching to identify all the orthologs listed to the identified orthologs.
-		for my $search_name ( keys %out_hash ) {
-			my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
-			for my $key ( keys %orthology_hash ) {
-				my @cur_line = @{$orthology_hash{$key}};
-				my @remaining_elements = @cur_line;
-				foreach (@ortholog_groups) {
-					my $this_ortholog = $_;
-					my $orthology_value = shift @remaining_elements;
-					if ($this_ortholog ne '-' && $this_ortholog eq "$orthology_value") {
-						if (exists ($out_hash{$key})) {
-						} else {
-							push @{ $out_hash{$key} }, @cur_line;
-						}
-						last;
-					} 
+	#This does a further three rounds of searching to identify all the orthologs listed to the identified orthologs.
+		foreach (1, 2, 3) {
+			for my $search_name ( keys %out_hash ) {
+				my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
+				for my $key ( keys %orthology_hash ) {
+					my @cur_line = @{$orthology_hash{$key}};
+					my @remaining_elements = @cur_line;
+					foreach (@ortholog_groups) {
+						my $this_ortholog = $_;
+						my $orthology_value = shift @remaining_elements;
+						if ($this_ortholog ne '-' && $this_ortholog eq "$orthology_value") {
+							if (exists ($out_hash{$key})) {
+							} else {
+								push @{ $out_hash{$key} }, @cur_line;
+							}
+							last;
+						} 
+					}
 				}
 			}
 		}

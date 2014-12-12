@@ -46,7 +46,7 @@ sub build_gene_hash {
 			my $cur_line = "$_";
 			$cur_gene =~ m/\|/;
 			$search_seq = $';
-			if ($cur_line =~ m/$search_seq/) { 
+			if ($cur_line =~ m/$search_seq\t/) { 
 				$hit_lines = $`;
 				@ao_hit_line = split ("\t", $hit_lines);
 				$hit_orthogroups .= $ao_hit_line[0];

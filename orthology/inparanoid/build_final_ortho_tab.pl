@@ -50,6 +50,7 @@ sub build_table {
 	foreach (@strains) {
 		my $strain = $_;
 		if ($file =~ m/^$strain/) {
+#			print "found $strain\n";
 			$hash_presence{$strain} = '+';
 		}
 	}
@@ -66,14 +67,16 @@ sub build_table {
  				my $strain = $_;
 #  				print "ao_line[0] is : $ao_line[0]\n";
 				if ($ao_line[0] =~ m/^$strain/) {
+#					print "found $strain\n";
 					$hash_presence{$strain} = '+';
 				}
 			}
 #  		print "$cur_line\n";
  	}
  	my @ao_outline = ("$group_name", "$file");
-	for my $key ( keys %hash_presence ) {
+	for my $key ( @strains ) {
  # 		print "$key\t$hash_presence{$key}\n";
+ # 		push (@ao_outline, "$key.$hash_presence{$key}");
  		push (@ao_outline, "$hash_presence{$key}");
  	}
 	print join ("\t", @ao_outline) . "\n"; 
