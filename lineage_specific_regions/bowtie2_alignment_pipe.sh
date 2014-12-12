@@ -14,18 +14,18 @@ GENOME_IN=$3
 
 ORGANISM1=$(echo $F_READS_IN | rev | cut -d "/" -f4 | rev)
 STRAIN1=$(echo $F_READS_IN | rev | cut -d "/" -f3 | rev)
-F_FILE="$STRAIN"_F_reads.fq
-R_FILE="$STRAIN"_R_reads.fq
+F_FILE="$STRAIN1"_F_reads.fq
+R_FILE="$STRAIN1"_R_reads.fq
 
 ORGANISM2=$(echo $GENOME_IN | rev | cut -d "/" -f3 | rev)
 STRAIN2=$(echo $GENOME_IN | rev | cut -d "/" -f2 | rev)
 GENOME_FILE=$(echo $GENOME_IN | rev | cut -d "/" -f1 | rev)
 
-GENOME_INDEX="$STRAIN"_bowtie_index
+GENOME_INDEX="$STRAIN2"_bowtie_index
 SAM_FILE="$STRAIN1"_vs_"$STRAIN2"
 
 CUR_PATH=$PWD
-WORK_DIR=$TMPDIR/bowtie2_"$STRAIN"
+WORK_DIR=$TMPDIR/bowtie2_"$SAM_FILE"
 
 mkdir -p $WORK_DIR
 cd $WORK_DIR
