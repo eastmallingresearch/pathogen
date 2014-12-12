@@ -218,9 +218,9 @@ rm id_tmp.txt
 #########################
 
 
-mkdir -p $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/
+mkdir -p $CUR_PATH/analysis/rxlr_atg/$ORGANISM/$STRAIN/
 
-cp -r $WORK_DIR/. $CUR_PATH/analysis/rxlr/$ORGANISM/$STRAIN/.
+cp -r $WORK_DIR/. $CUR_PATH/analysis/rxlr_atg/$ORGANISM/$STRAIN/.
 
 rm -r $TMPDIR
 
