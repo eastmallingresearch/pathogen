@@ -202,14 +202,14 @@ tail -n +2 $STRAIN.mimps.fa | head -n -1 > "$STRAIN"_mimps.fa
 grep '>' "$STRAIN"_sp_rxlr.fa | cut -f1 > id_tmp.txt
 printf "" > "$STRAIN"_sp_rxlr_nuc.fa
 while read line; do
-	grep -w -A1 "$line" "$STRAIN"_nuc.fa >> "$STRAIN"_sp_rxlr_nuc.fa
+	grep -w -A1 "$line" "$STRAIN"_nuc.fa| sed 's/--//g' >> "$STRAIN"_sp_rxlr_nuc.fa
 done<id_tmp.txt
 rm id_tmp.txt
 
 grep '>' "$STRAIN".mimps.fa | cut -f1 > id_tmp.txt
 printf "" > "$STRAIN"_mimps_nuc.fa
 while read line; do
-	grep -w -A1 "$line" "$STRAIN"_nuc.fa >> "$STRAIN"_mimps_nuc.fa
+	grep -w -A1 "$line" "$STRAIN"_nuc.fa | sed 's/--//g' >> "$STRAIN"_mimps_nuc.fa
 done<id_tmp.txt
 rm id_tmp.txt
 
