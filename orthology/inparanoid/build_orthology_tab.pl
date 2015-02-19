@@ -45,14 +45,20 @@ sub build_gene_hash {
 		while (<SQLFILE1>) {
 			my $cur_line = "$_";
 			$cur_gene =~ m/\|/;
-			$search_seq = $';
+			$search_seq = "$`" . "." . "$'";
+#			print "$search_seq\n";
 			if ($cur_line =~ m/$search_seq\t/) { 
+#			if ($cur_line =~ m/$cur_gene\t/) {
+#				print "$search_seq *_*\t";
 				$hit_lines = $`;
+#				print "$hit_lines\n";
 				@ao_hit_line = split ("\t", $hit_lines);
-				$hit_orthogroups .= $ao_hit_line[0];
+				$hit_orthogroups .= "$ao_hit_line[0]" . ",";
+#				print "$cur_gene\n$search_seq\n$cur_line\n$hit_lines\n@ao_hit_line\n";
+#				exit;
 				}
 		}
-		if ($hit_orthogroups eq '') {$hit_orthogroups = '-'};	
+		if ($hit_orthogroups eq '') {$hit_orthogroups = '-,'};	
 		push @{ $hashofgenes{$cur_gene} }, $hit_orthogroups;
 	}
 }
