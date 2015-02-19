@@ -142,7 +142,6 @@ sub ortholog_search {
 	my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
 	for my $key ( keys %orthology_hash ) {
 		my @cur_line = @{$orthology_hash{$key}};
-		print "@cur_line\n";
 		if ($cur_line[0] =~ 'sqltable') { next; }
 		my @remaining_elements = @cur_line;
 		foreach (@ortholog_groups) {
@@ -167,52 +166,26 @@ sub ortholog_search {
 	#This does a further three rounds of searching to identify all the orthologs listed to the identified orthologs.
 		foreach (1, 2, 3) {
 			for my $search_name ( keys %out_hash ) {
-#				print "$search_name\n";
 				my @ortholog_groups = @{$orthology_hash{$search_name}} or print "\nError: Can not find $search_name in hash\n";
-#				print "@ortholog_groups\n";
 				for my $key ( keys %orthology_hash ) {
-	#				print "$key\n";
 					my @cur_line = @{$orthology_hash{$key}};
-#					print "\n@cur_line\n";
 					if ($cur_line[0] =~ 'sqltable') { next; }
 					my @remaining_elements = @cur_line;
 					foreach (@ortholog_groups) {
 						my $these_orthologs = $_;
-#						print "$these_orthologs\n";
 						my @ao_these_orthologs = split (',', $these_orthologs);
 						my $regex_these_orthologs = join ('\b|\b', @ao_these_orthologs);
 						my $these_orthology_values = shift @remaining_elements;
 						my @ao_orthology_values = split (',', $these_orthology_values);
 						foreach (@ao_orthology_values) {
 							my $this_ortholog = $_;
-#							print "@ao_these_orthologs\n"; 
-#							print "$regex_these_orthologs\n";
-#							print "\t$this_ortholog\n";
 							if ($this_ortholog ne '-' && $this_ortholog =~ /\b$regex_these_orthologs\b/) {
-#								print "found match\n";
 								if (exists ($out_hash{$key})) {
-#								print "already present\n";
 								} else {
-#									print "@cur_line\n";
-#									print "new match\n";
-#									print "@cur_line\n";
 									push @{ $out_hash{$key} }, @cur_line;
 								}
 								last;
 							}
-#							}
-# 				for my $key ( keys %orthology_hash ) {
-# 					my @cur_line = @{$orthology_hash{$key}};
-# 					my @remaining_elements = @cur_line;
-# 					foreach (@ortholog_groups) {
-# 						my $this_ortholog = $_;
-# 						my $orthology_value = shift @remaining_elements;
-# 						if ($this_ortholog ne '-' && $this_ortholog eq "$orthology_value") {
-# 							if (exists ($out_hash{$key})) {
-# 							} else {
-# 								push @{ $out_hash{$key} }, @cur_line;
-# 							}
-# 							last;
 						} 
 					}
 				}
