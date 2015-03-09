@@ -102,7 +102,7 @@ for ($i = 0; $i < $total; $i++) {
          	$mimpCount=$mimpCount+1;;
 		print OUT "$seqName --mimp starts at $mimp_pos\.\n";
         	print OUT substr($dnaSeq, ($mimp_pos-16), 80), "\n";
-		my $mimpStart = $mimp_pos-16;
+		my $mimpStart = $mimp_pos-15;
 		my $mimpEnd = $mimp_pos;
 		my $strand = "+";
    	    print_gff($seqName, $mimpStart, $mimpEnd, $strand, $mimpCount);
@@ -113,7 +113,7 @@ for ($i = 0; $i < $total; $i++) {
 		$mimpCount=$mimpCount+1;;
 		print OUT "$seqName --mimp starts at $mimp_pos\.\n";
 			print OUT substr($dnaSeq, ($mimp_pos-16), 80), "\n";
-		my $mimpStart = $mimp_pos-16;
+		my $mimpStart = $mimp_pos-15;
 		my $mimpEnd = $mimp_pos;
 		my $strand = "-";
       	print_gff($seqName, $mimpStart, $mimpEnd, $strand, $mimpCount);
