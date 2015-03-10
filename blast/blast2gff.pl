@@ -5,9 +5,10 @@ use Data::Dumper;
 
 # blast2gff.pl parses outputs from blast_pipe.sh to .gff files.
 
-my $usage = "blast2gff.pl <feature_name (ie. RxLR_gene)> <blast_homolgy_file.txt> > <blast_homology.gff3>";
+my $usage = "blast2gff.pl <feature_name (ie. RxLR_gene)> <max_no_hits_per_query> <blast_homolgy_file.txt> > <blast_homology.gff3>";
 
 my $feature_name = shift or die $usage;
+my $max_hits = shift or die $usage;
 my $infile = shift or die $usage;
 
 
@@ -66,6 +67,7 @@ while (my $line = <INFILE>) {
 	} else {
 		my $i = 0;
 		for (@hit_contig) { 
+			if ("$i" == "$max_hits") {last;}
 			$col1 = $ao_line[$hit_contig[$i]] or next;
 			$col4 = $ao_line[$hit_start[$i]];
 			$col5 = $ao_line[$hit_end[$i]];
