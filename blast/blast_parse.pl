@@ -78,8 +78,10 @@ while ($itterations != $group_no){ print "\tGrp$itterations"; $itterations ++ ;}
 print "\n";
 
 foreach (@keys) {
+	if ($out_hash{$_}) {
 	my $outline = (join ("\t", (split (';', $out_hash{$_}))));
 	print "$_\t$outline\n";
+	} else {print "$_\n"}
 }
 
 exit;
