@@ -4,7 +4,7 @@ use warnings;
 
 # blast2gff.pl parses outputs from blast_pipe.sh to .gff files.
 
-my $usage = "blast2gff.pl <feature_name (ie. RxLR_gene)> <blast_homolgy_file.txt> > <blast_homology.gff>";
+my $usage = "blast2gff.pl <feature_name (ie. RxLR_gene)> <blast_homolgy_file.txt> > <blast_homology.gff3>";
 
 my $feature_name = shift or die $usage;
 my $infile = shift or die $usage;
@@ -53,7 +53,7 @@ while (my $line = <INFILE>) {
 		$col6 = $ao_line[$per_id];
 		$col7 = $ao_line[$hit_strand];
 		if ($col7 eq '-1') {$col7 = '-';} else {$col7 = '+';} 
-		$col9 = "NAME=$ao_line[0]";
+		$col9 = "\"ID=$ao_line[0]\";";
 	print "$col1\t$col2\t$col3\t$col4\t$col5\t$col6\t$col7\t$col8\t$col9\n";
 	}
 }
