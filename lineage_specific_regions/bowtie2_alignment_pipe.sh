@@ -30,13 +30,13 @@ WORK_DIR=$TMPDIR/bowtie2_"$SAM_FILE"
 mkdir -p $WORK_DIR
 cd $WORK_DIR
 
-#fastq-mcf /home/armita/git_repos/emr_repos/tools/seq_tools/illumina_full_adapters.fa $CUR_PATH/$F_READS_IN $CUR_PATH/$R_READS_IN -o $F_FILE -o $R_FILE -C 1000000 -u -k 20 -t 0.01 -q 30
-cat $CUR_PATH/$F_READS_IN | gunzip -c -f > $F_FILE
-cat $CUR_PATH/$F_READS_IN | gunzip -c -f > $R_FILE
+fastq-mcf /home/armita/git_repos/emr_repos/tools/seq_tools/illumina_full_adapters.fa $CUR_PATH/$F_READS_IN $CUR_PATH/$R_READS_IN -o $F_FILE -o $R_FILE -C 1000000 -u -k 20 -t 0.01 -q 30
+#cat $CUR_PATH/$F_READS_IN | gunzip -c -f > $F_FILE
+#cat $CUR_PATH/$F_READS_IN | gunzip -c -f > $R_FILE
 cp $CUR_PATH/$GENOME_IN $GENOME_FILE 
 
 bowtie2-build $GENOME_FILE $GENOME_INDEX
-bowtie2 -x $GENOME_INDEX -1 $F_FILE -2 $R_FILE -S "$SAM_FILE".sam  -p 3 --un-conc "$SAM_FILE"_unaligned.fastq
+bowtie2 -x $GENOME_INDEX -1 $F_FILE -2 $R_FILE -S "$SAM_FILE".sam -p 3 --un-conc "$SAM_FILE"_unaligned.fastq > "$SAM_FILE"_stats.txt
 samtools view -bS "$SAM_FILE".sam > "$SAM_FILE".bam
 samtools sort "$SAM_FILE".bam "$SAM_FILE"_sorted
 samtools index "$SAM_FILE"_sorted.bam
