@@ -33,7 +33,7 @@ my $UpDown = shift;
 unless ($UpDown =~ m/\+|\-/) {die "$usage"};
 # Set the no. bp to extend the feature by	
 my $distance = shift;
-unless ($UpDown =~ m/\d+/) {die "$usage"};
+unless ($distance =~ m/\d+/) {die "$usage"};
 # Open input file
 my $gffFile = shift;
 # chomp $fastaFile;
@@ -62,7 +62,7 @@ open (GFF_FILE, "$gffFile ") || die "Cannot open file \"$gffFile\"\n\n";
 while (<GFF_FILE>) {
    	chomp;
    	my $thisLine = $_;
-   	my @gffFeatureIn = split $thisLine;
+   	my @gffFeatureIn = split("\t", $thisLine);
    
    	my $col1 = shift @gffFeatureIn;			# Sequence id
 	my $col2 = shift @gffFeatureIn;			# Source
@@ -72,7 +72,7 @@ while (<GFF_FILE>) {
 	my $col6 = shift @gffFeatureIn;			# Score
 	my $col7 = shift @gffFeatureIn;			# Strand
 	my $col8 = shift @gffFeatureIn;			# Phase
-	my $col9 = @gffFeatureIn;				# Attribute
+	my $col9 = "@gffFeatureIn";				# Attribute
 	
     ($col4, $col5) = mod_gff($col4, $col5, $col7, $UpDown, $distance);			# $mimpStart, $mimpEnd, $strand
 	print join ("\t", $col1, $col2, $col3, $col4, $col5, $col6, $col7, $col8, $col9) . "\n";
@@ -100,7 +100,7 @@ sub mod_gff {
     my $downstream = 'no';
     if ($UpDown =~ m/\+/) { $upstream = 'yes'; }
     if ($UpDown =~ m/\-/) { $downstream = 'yes'; }
-    
+#    $mimpStart = 0;
     if ($strand eq '+') {
     	if ($downstream eq 'yes') {
     		$mimpEnd += $distance;
