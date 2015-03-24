@@ -81,8 +81,8 @@ sub mod_gff {
     		$mimpEnd += $distance;
     	}
     }
-    if ($mimpStart <= 0) {
-    	$mimpStart = 0;
+    if ($mimpStart <= 1) {
+    	$mimpStart = 1;
     }
 	return ($mimpStart, $mimpEnd);
 }
