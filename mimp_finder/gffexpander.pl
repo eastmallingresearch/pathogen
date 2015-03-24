@@ -98,8 +98,8 @@ sub mod_gff {
 	my ($mimpStart, $mimpEnd, $strand, $UpDown, $distance) = @_;
     my $upstream = 'no'; 
     my $downstream = 'no';
-    if ($UpDown =~ m/\+/) { $upstream = 'yes'; }
-    if ($UpDown =~ m/\-/) { $downstream = 'yes'; }
+    if ($UpDown =~ m/\-/) { $upstream = 'yes'; }
+    if ($UpDown =~ m/\+/) { $downstream = 'yes'; }
 #    $mimpStart = 0;
     if ($strand eq '+') {
     	if ($downstream eq 'yes') {
