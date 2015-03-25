@@ -51,7 +51,8 @@ while (my $line = <INFILE>) {
 			$col1 = $ao_line[$hit_contig[$i]] or next;
 			$col4 = $ao_line[$hit_start[$i]];
 			$col5 = $ao_line[$hit_end[$i]];
-			$col6 = $ao_line[$per_id[$i]];
+#			$col6 = $ao_line[$per_id[$i]];
+			$col6 = ".";
 			$col7 = $ao_line[$hit_strand[$i]];
 			if ($col7 eq '-1') {$col7 = '-';} else {$col7 = '+';} 
 			$i++;
