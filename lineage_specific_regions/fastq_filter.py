@@ -38,7 +38,7 @@ with open(readsFile) as f:
 				
 printnext = 0
 for line in fileLines:
- 	if line.startswith('@M01678'):		
+ 	if line.startswith(('@M01678', '@HWUSI')):		
  		if "".join(line.split()[0]) in headerDic:
  			print(line)
  			printnext = 3
