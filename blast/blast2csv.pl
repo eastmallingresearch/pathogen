@@ -7,7 +7,7 @@ use Bio::Search::Result::BlastResult;
 # Perform a tBlASTn search of query genes against a file containing nucleotide data. It will then parse the results 
 # into a tab separated output
 
-my $usage = "blast2csv.pl <query_file.fa> <blastn/tblastn/tblastx> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
+my $usage = "blast2csv.pl <query_file.fa> <blastn/tblastn/tblastx/blastp/blastx> <genomic_contigs.fa> <no.hits_to_report> > <outfile.csv>\n\n";
 my $query_file = shift or die $usage;
 my $blast_type = shift or die $usage;
 my $database = shift or die $usage;
@@ -20,7 +20,12 @@ my $seq_obj;
 my $method; 
 my $alphabet;
 
-if ($blast_type eq 'blastn') {$alphabet = 'dna'} elsif ($blast_type eq 'tblastn') {$alphabet = 'protein'} elsif ($blast_type eq 'tblastx') {$alphabet = 'dna'} else {die "$usage"}
+if ($blast_type eq 'blastn') {$alphabet = 'dna'} 
+elsif ($blast_type eq 'blastx') {$alphabet = 'dna'}
+elsif ($blast_type eq 'blastp') {$alphabet = 'protein'}
+elsif ($blast_type eq 'tblastn') {$alphabet = 'protein'} 
+elsif ($blast_type eq 'tblastx') {$alphabet = 'dna'}
+else {die "$usage"}
 
 
 #-------------------------------------------------------
