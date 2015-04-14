@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #!/bin/bash
 #$ -S /bin/bash
 #$ -cwd
