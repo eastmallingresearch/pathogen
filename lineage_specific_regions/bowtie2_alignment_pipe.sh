@@ -43,7 +43,7 @@ samtools index "$SAM_FILE"_sorted.bam
 samtools faidx $GENOME_FILE
 #samtools tview "$SAM_FILE"_sorted.bam $GENOME_FILE
 samtools idxstats "$SAM_FILE"_sorted.bam > "$SAM_FILE"_sorted_indexstats.csv
-/home/armita/git_repos/emr_repos/scripts/alternaria/assembly/divide_col.py "$SAM_FILE"_sorted_indexstats.csv 1 2 > "$SAM_FILE"_sorted_indexstats_coverage.csv
+/home/armita/git_repos/emr_repos/scripts/alternaria/assembly/divide_col.py "$SAM_FILE"_sorted_indexstats.csv 2 1 > "$SAM_FILE"_sorted_indexstats_coverage.csv
 printf "occurence\taligned_reads_per_base\n" > "$SAM_FILE"_reads_per_base.csv
 cat "$SAM_FILE"_sorted_indexstats_coverage.csv | cut -f5 | sort -n | uniq -c | sed 's/ *//' | sed 's/ /\t/g' >> "$SAM_FILE"_reads_per_base.csv
 cat "$SAM_FILE"_sorted_indexstats_coverage.csv | cut -f2,5 | grep -w '0' | cut -f1 | python -c"import sys; print(sum(map(int, sys.stdin)))"
