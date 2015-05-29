@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Cwd;
 
-my $usage = "build_final_ortho_tab.pl <directory_containing_ortholog_files> <output_directory>";
+my $usage = "build_final_ortho_tab.pl <directory_containing_ortholog_files> <strain_name_X> <strain_name_Y> <strain_name_Z> > <output_directory>";
 
 my $indir = shift or die $usage;
 my $outdir;
