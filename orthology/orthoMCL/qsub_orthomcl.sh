@@ -9,7 +9,7 @@ set -u
 set -e
 set -o pipefail
 
-Usage='qsub_orthomcl.sh <merged_file_of_blast_hits.tsv> <directory_containing_good_proteins>'
+Usage='qsub_orthomcl.sh <merged_file_of_blast_hits.tsv> <good_proteins.fasta>'
 
 # ----------------------	Step 1	----------------------
 # 		Set Variables
@@ -20,7 +20,7 @@ MergeHits=$1
 GoodProts=$2
 # MergeHits=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/Pcac_Pinf_P.ram_P.soj_blast.tab
 # GoodProts=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/goodProteins/goodProteins.fasta
-IsolateAbrv=$(echo $GoodProts | rev | cut -f2 -d '/' | rev)
+IsolateAbrv=$(echo $GoodProts | rev | cut -f3 -d '/' | rev)
 
 CurPath=$PWD
 WorkDir=$TMPDIR/orthomcl
@@ -63,11 +63,25 @@ echo "OrthoMatrix = $OrthoMatrix"
 #-------------------------------------------------------
 
 cp /home/armita/testing/armita_orthomcl/orthomcl.config $Config
-sed -i "s/similarSequencesTable=.*/similarSequencesTable="$IsolateAbrv"_SimilarSequences/g" $Config
-sed -i "s/orthologTable=.*/orthologTable="$IsolateAbrv"_Ortholog/g" $Config
-sed -i "s/inParalogTable=.*/inParalogTable="$IsolateAbrv"_InParalog/g" $Config
-sed -i "s/coOrthologTable=.*/coOrthologTable="$IsolateAbrv"_CoOrtholog/g" $Config
-sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$IsolateAbrv"_interTaxonMatch/g" $Config
+
+TabName1="$IsolateAbrv"_SimilarSequences
+TabName2="$IsolateAbrv"_Ortholog
+TabName3="$IsolateAbrv"_InParalog
+TabName4="$IsolateAbrv"_CoOrtholog
+TabName5="$IsolateAbrv"_interTaxonMatch
+sed -i "s/similarSequencesTable=.*/similarSequencesTable="$TabName1"/g" $Config
+sed -i "s/orthologTable=.*/orthologTable="$TabName2"/g" $Config
+sed -i "s/inParalogTable=.*/inParalogTable="$TabName3"/g" $Config
+sed -i "s/coOrthologTable=.*/coOrthologTable="$TabName4"/g" $Config
+sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$TabName5"/g" $Config
+
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestInterTaxonScore;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestQueryTaxonScore;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName1;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName2;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName3;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName4;"
+mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName5;"
 
 ~/prog/orthomcl/orthomclSoftware-v2.0.9/bin/orthomclInstallSchema $Config install_schema.log
 
@@ -85,7 +99,7 @@ sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$IsolateAbrv"_interTaxonMa
 
 #-- a --
 mkdir -p goodProtDir
-cp $CurPath/$GoodProts/* goodProtDir/.
+cp $CurPath/$GoodProts goodProtDir/.
 orthomclBlastParser $CurPath/$MergeHits goodProtDir >> $SimilarGenes
 #-- b --
 ls -lh $SimilarGenes # The database will be 5x the size of this file = ~2.5Gb
@@ -109,5 +123,5 @@ $GitDir/orthoMCLgroups2tab.py $CurPath/$GoodProts $OrthoGroups > $OrthoMatrix
 #-------------------------------------------------------
 
 rm -r goodProtDir
-mkdir -p $CurPath/$OutDir
-mv $WorkDir $CurPath/$OutDir
+mkdir -p $OutDir
+mv $WorkDir/* $OutDir/.
