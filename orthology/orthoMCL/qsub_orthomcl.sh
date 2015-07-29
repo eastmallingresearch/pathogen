@@ -20,7 +20,7 @@ MergeHits=$1
 GoodProts=$2
 # MergeHits=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/Pcac_Pinf_P.ram_P.soj_blast.tab
 # GoodProts=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/goodProteins/goodProteins.fasta
-IsolateAbrv=$(echo $MergeHits | rev | cut -f2 -d '/' | rev)
+IsolateAbrv=$(echo $GoodProts | rev | cut -f2 -d '/' | rev)
 
 CurPath=$PWD
 WorkDir=$TMPDIR/orthomcl
@@ -63,11 +63,11 @@ echo "OrthoMatrix = $OrthoMatrix"
 #-------------------------------------------------------
 
 cp /home/armita/testing/armita_orthomcl/orthomcl.config $Config
-sed -i "s/similarSequencesTable=.*/similarSequencesTable="$IsolateAbrv"_SimilarSequences_spoons/g" $Config
-sed -i "s/orthologTable=.*/orthologTable="$IsolateAbrv"_Ortholog_spoons/g" $Config
-sed -i "s/inParalogTable=.*/inParalogTable="$IsolateAbrv"_InParalog_spoons/g" $Config
-sed -i "s/coOrthologTable=.*/coOrthologTable="$IsolateAbrv"_CoOrtholog_spoons/g" $Config
-sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$IsolateAbrv"_interTaxonMatch_spoons/g" $Config
+sed -i "s/similarSequencesTable=.*/similarSequencesTable="$IsolateAbrv"_SimilarSequences/g" $Config
+sed -i "s/orthologTable=.*/orthologTable="$IsolateAbrv"_Ortholog/g" $Config
+sed -i "s/inParalogTable=.*/inParalogTable="$IsolateAbrv"_InParalog/g" $Config
+sed -i "s/coOrthologTable=.*/coOrthologTable="$IsolateAbrv"_CoOrtholog/g" $Config
+sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$IsolateAbrv"_interTaxonMatch/g" $Config
 
 ~/prog/orthomcl/orthomclSoftware-v2.0.9/bin/orthomclInstallSchema $Config install_schema.log
 
@@ -85,7 +85,7 @@ sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$IsolateAbrv"_interTaxonMa
 
 #-- a --
 mkdir -p goodProtDir
-cp $CurPath/$GoodProts goodProtDir/.
+cp $CurPath/$GoodProts/* goodProtDir/.
 orthomclBlastParser $CurPath/$MergeHits goodProtDir >> $SimilarGenes
 #-- b --
 ls -lh $SimilarGenes # The database will be 5x the size of this file = ~2.5Gb
