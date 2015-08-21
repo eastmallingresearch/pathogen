@@ -49,11 +49,21 @@ n12=nrow(subset(df1, df1[,1] == 1 & df1[,2] == 1))
 n13=nrow(subset(df1, df1[,1] == 1 & df1[,3] == 1))
 n23=nrow(subset(df1, df1[,2] == 1 & df1[,3] == 1))
 n123=nrow(subset(df1, df1[,1] == 1 & df1[,2] == 1 & df1[,3] == 1))
+label1
+area1
+label2
+area2
+label3
+area3
+n12
+n13
+n23
+n123
 summary(n12)
 summary(n123)
 pdf(o)
 draw.triple.venn(area1, area2, area3,
-    n12, n13, n23,
+    n12, n23, n13,
     n123,
     category = c(label1, label2, label3),
 #    rep("", 4),
