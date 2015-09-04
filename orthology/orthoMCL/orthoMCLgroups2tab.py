@@ -7,12 +7,12 @@ class Cluster:
         self.name = name
         self.members = {}
 
-    def add(self, bug, member):
-        self.members[bug] = member
+    def add(self, strain, member):
+        self.members[strain] = member
 
 all_proteins = {}
 clusters = []
-bugs = {}
+strains = {}
 
 for ln in open(sys.argv[1]):
     if ln.startswith('>'):
@@ -27,9 +27,9 @@ for ln in open(sys.argv[2]):
     c = Cluster(prefix)
 
     for p in proteins:
-        bug, id = p.split("|")
-        c.add(bug, id)
-        bugs[bug] = bug
+        strain, id = p.split("|")
+        c.add(strain, id)
+        strains[strain] = strain
 
         all_proteins[p] = True
 
@@ -40,16 +40,17 @@ i = 1
 for p, already_counted in all_proteins.iteritems():
     if already_counted == False:
         c = Cluster("single%d" % (i))
-        bug, id = p.split("|")
-        c.add(bug, id)
+        strain, id = p.split("|")
+        c.add(strain, id)
         i += 1
         clusters.append(c)
+
 
 first_cluster = clusters[0]
 print " ".join(['"%s"' % (c.name) for c in clusters])
 
 i = 0
-for b in sorted(bugs):
+for b in sorted(strains):
     print '"%s"' % (b),
 
     for c in clusters:
