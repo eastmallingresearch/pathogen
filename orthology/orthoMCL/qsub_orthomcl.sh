@@ -9,7 +9,7 @@ set -u
 set -e
 set -o pipefail
 
-Usage='qsub_orthomcl.sh <merged_file_of_blast_hits.tsv> <good_proteins.fasta>'
+Usage='qsub_orthomcl.sh <merged_file_of_blast_hits.tsv> <good_proteins.fasta> [Inflation value (1-5)]'
 
 # ----------------------	Step 1	----------------------
 # 		Set Variables
@@ -18,6 +18,12 @@ Usage='qsub_orthomcl.sh <merged_file_of_blast_hits.tsv> <good_proteins.fasta>'
 
 MergeHits=$1
 GoodProts=$2
+# The inflation value determines the tightness of your clusters
+#   - If higher you will have smaller and more closely-related clusters
+Inflation='1.5'
+if [ -n "$3" ]; then
+  Inflation="$3"
+fi
 # MergeHits=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/Pcac_Pinf_P.ram_P.soj_blast.tab
 # GoodProts=analysis/orthology/orthomcl/Pcac_Pinf_Pram_Psoj/goodProteins/goodProteins.fasta
 IsolateAbrv=$(echo $GoodProts | rev | cut -f3 -d '/' | rev)
@@ -45,6 +51,7 @@ echo ""
 echo "The following inputs were given:"
 echo "MergeHits = $MergeHits"
 echo "GoodProts = $GoodProts"
+echo "Inflation value = $Inflation"
 echo "output will be copied to:"
 echo "OutDir = $OutDir"
 echo "Files this script will make:"
@@ -112,7 +119,7 @@ orthomclPairs $Config $Log_file cleanup=yes #<startAfter=TAG>
 orthomclDumpPairsFiles $Config
 mv mclInput $MclInput
 #-- e --
-mcl $MclInput --abc -I 1.5 -o $MclOutput
+mcl $MclInput --abc -I $Inflation -o $MclOutput
 cat $MclOutput | orthomclMclToGroups orthogroup 1 > $OrthoGroups
 #-- f --
 GitDir=~/git_repos/emr_repos/tools/pathogen/orthology/orthoMCL
