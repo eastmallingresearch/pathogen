@@ -18,66 +18,78 @@ import re
 #-----------------------------------------------------
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--orthogroups',required=True,type=str,help='text file output of OrthoMCl orthogroups')
-# ap.add_argument('--out_dir',required=True,type=str,help='the directory where fasta files containing orthogroups will be written ')
+ap.add_argument('--orthogroups',required=True,type=str,help='The text file containing the tribMCL ortholog groups')
+ap.add_argument('--out_txt',required=True,type=str,help='Output file containing the ortholog groups in orthoMCL output format')
+ap.add_argument('--out_tab',required=True,type=str,help='Output file containing the matrix of ortholog groups used to construct a venn diagram.')
 conf = ap.parse_args()
 
 with open(conf.orthogroups) as f:
-    # ortho_lines = f.readlines()
     ortho_lines = (line.rstrip() for line in f)
-    ortho_lines = list(ortho_lines for ortho_lines in ortho_lines if ortho_lines) # Non-blank lines in a list
+    ortho_lines = list(ortho_lines for ortho_lines in ortho_lines if ortho_lines) # For all non-blank lines in a list
 
 #-----------------------------------------------------
 # Step 2
 # Build a dictionary of orthogroups
 #-----------------------------------------------------
 
+split_organsim = []
+organism_set = Set([])
 ortho_dict = defaultdict(list)
-# ortho_dict = {}
+
+print ("Reading infile")
 for line in ortho_lines:
     line = line.rstrip().rstrip()
     if line.startswith('%'):
-        print ("spoons")
+        print(line)
         continue
-    # split_line = ''
     split_line = line.split()
-    # print ("monkeys")
-    # for element in split_line:
-        # print (element),
-    # print("")
-    # print(split_line)
     gene = split_line[0]
     orthogroup = split_line[1]
-    # print (gene + " - " + orthogroup)
-    # ortho_dict[str(orthogroup)].append(gene)
-# exit
+    split_organism = gene.split("|")
+    organism_set.add(split_organism[0])
+    ortho_dict[str(orthogroup)].append(gene)
 
 #-----------------------------------------------------
 # Step 3
 # Parse the dictionary into a matrix
 #-----------------------------------------------------
 
-print (ortho_dict)
+keys = []
+sorted_keys = []
+keys = ortho_dict.keys()
+out_txt_lines = []
+organism_dict = defaultdict(list)
 
-# keys = []
-# sorted_keys = []
-# keys = ortho_dict.keys()
-#
-# keys.sort(key=int)
-# header_line = []
-# ortho_list = []
-# for group_name in keys:
-#     Organism_dict["header_line"].append("orthogroup" + str(group_name))
-#     ortho_list = ortho_dict[group_name]
-#     for Organism in Organism_list:
-#         if Organism in ortho_list:
-#             Organism_dict[Organism].append("1")
-#         else:
-#              Organism_dict[Organism].append("0")
-#
-#
-#
-#     outfile = str(conf.out_dir) + "/orthogroup" + str(group_name) + ".fa"
-#     with open(outfile, 'w') as o:
-#         for line in ortho_fasta:
-#             o.write(line + "\n")
+keys.sort(key=int)
+header_line = []
+ortho_list = []
+print("The organisms contained in this dataset are:\t" + " ".join(organism_set))
+for group_name in keys:
+    # Prepare output lines parsed into orthomcl format
+    ortho_list = ortho_dict[group_name]
+    out_txt_lines.append("orthogroup" + group_name + ": " + " ".join(ortho_list))
+    # Prepare a matrix for venn diagram plotting
+    organism_dict["header_line"].append("\"orthogroup" + str(group_name) + '\"')
+    for organism in organism_set:
+        if any(organism in s for s in ortho_list):
+            organism_dict[organism].append("1")
+        else:
+            organism_dict[organism].append("0")
+
+
+#-----------------------------------------------------
+# Step 4
+# Print output lines
+#-----------------------------------------------------
+
+# Output the proteins contained in each orthogroup in orthoMCL format
+with open(conf.out_txt, 'w') as o:
+    for line in out_txt_lines:
+        o.write (line + "\n")
+# Output the matrix of orthogroups for plotting of a venn diagram
+with open(conf.out_tab, 'w') as o:
+    o.write ( "" + "\t" + "\t".join(organism_dict["header_line"]) + "\n")
+    for organism in organism_set:
+        o.write ('\"' + organism + "\"\t" + "\t".join(organism_dict[organism]) + "\n")
+
+exit
