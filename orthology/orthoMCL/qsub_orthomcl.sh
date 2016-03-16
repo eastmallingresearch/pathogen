@@ -29,9 +29,9 @@ fi
 IsolateAbrv=$(echo $GoodProts | rev | cut -f3 -d '/' | rev)
 
 CurPath=$PWD
-WorkDir=$TMPDIR/orthomcl
+# WorkDir=$TMPDIR/orthomcl
 # CurPath=/home/groups/harrisonlab/project_files/idris
-# WorkDir=/tmp/orthomcl
+WorkDir=/tmp/orthomcl
 OutDir=$CurPath/analysis/orthology/orthomcl/$IsolateAbrv
 mkdir -p $WorkDir
 cd $WorkDir
@@ -81,6 +81,8 @@ sed -i "s/orthologTable=.*/orthologTable="$TabName2"/g" $Config
 sed -i "s/inParalogTable=.*/inParalogTable="$TabName3"/g" $Config
 sed -i "s/coOrthologTable=.*/coOrthologTable="$TabName4"/g" $Config
 sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$TabName5"/g" $Config
+sed -i "s/pmatch_cutoff=.*/pmatch_cutoff=50/g" $Config
+sed -i "s/evalueExponentCutoff=.*/evalueExponentCutoff=-30/g" $Config
 
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestInterTaxonScore;"
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestQueryTaxonScore;"
@@ -92,7 +94,8 @@ mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e 
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName4;"
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName5;"
 
-~/prog/orthomcl/orthomclSoftware-v2.0.9/bin/orthomclInstallSchema $Config install_schema.log
+ProgDir=/home/armita/prog/orthomcl/orthomclSoftware-v2.0.9/bin
+$ProgDir/orthomclInstallSchema $Config install_schema.log
 
 
 # ----------------------	Step 3	----------------------
