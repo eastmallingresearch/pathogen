@@ -23,6 +23,6 @@ cp $CurPath/$ProtFile prot.fasta
 
 "$ProgPath"/sscp_filter.py prot.fasta > "$Strain"_sscp.fasta
 
-mkdir -p $CurPath/$OutDir
+mkdir -p $OutDir
 cp "$Strain"_sscp.fasta $OutDir/.
 rm -r $TMPDIR

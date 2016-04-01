@@ -12,8 +12,13 @@
 # install.packages("optparse",repos="http://cran.uk.r-project.org")
 # When given the option, install this package to a local library.
 
+# The script also requires the colorspace package. This can be downloaded by
+# opening R and running the following command:
+# install.packages(colorspace)
+
 #get config options
 library(optparse)
+library(colorspace)
 library(VennDiagram, lib.loc="/home/armita/R-packages/")
 opt_list = list(
     make_option("--inp", type="character", help="tab seperated file containing matrix of presence of orthogroups"),
@@ -94,7 +99,7 @@ draw.quintuple.venn(
   lwd = rep(2, 5),
 	lty = rep("solid", 5),
   col = rep("black", 5),
-  fill = NULL,
+  fill = c(rainbow_hcl(5)),
   alpha = rep(0.5, 5),
   label.col = rep("black", 31),
   cex = rep(1, 31),
