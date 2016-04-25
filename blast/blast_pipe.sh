@@ -3,10 +3,11 @@
 #$ -cwd
 #$ -pe smp 1
 #$ -l virtual_free=0.9G
+#$ -l h=blacklace02.blacklace|blacklace03.blacklace|blacklace04.blacklace|blacklace05.blacklace|blacklace06.blacklace|blacklace07.blacklace|blacklace08.blacklace|blacklace09.blacklace|blacklace10.blacklace
 
 
 # script to run blast homology pipe
-USAGE="blast_pipe.sh <query.fa> <dna, protein (query_format)> <genome_sequence.fa> <path_to_blast_pipe.sh>"
+USAGE="blast_pipe.sh <query.fa> <dna, protein (query_format)> <genome_sequence.fa> <output_directory>"
 
 
 #-------------------------------------------------------
@@ -16,12 +17,12 @@ USAGE="blast_pipe.sh <query.fa> <dna, protein (query_format)> <genome_sequence.f
 IN_QUERY=$1
 QUERY_FORMAT=$2
 IN_GENOME=$3
-if [ "$4" ]; then SCRIPT_DIR=$3; else SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/blast; fi
 ORGANISM=$(echo $IN_GENOME | rev | cut -d "/" -f4 | rev)
 STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
 QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
 GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
 CUR_PATH=$PWD
+if [ "$4" ]; then OutDir=$CUR_PATH/$4 else OutDir=$CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN; fi
 WORK_DIR=$TMP/blast_"$STRAIN"
 mkdir $WORK_DIR
 cd $WORK_DIR
@@ -54,6 +55,7 @@ fi
 # 		Step 1.		blast queries against themselves
 #-------------------------------------------------------
 
+SCRIPT_DIR=$HOME/git_repos/emr_repos/tools/pathogen/blast
 $SCRIPT_DIR/blast_self.pl $QUERY $SELF_BLAST_TYPE > "$QUERY"_self.csv
 
 #-------------------------------------------------------
@@ -84,4 +86,3 @@ mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
 cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/.
 
 rm -r $WORK_DIR/
-
