@@ -23,7 +23,7 @@ QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
 GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
 CUR_PATH=$PWD
 if [ "$4" ]; then OutDir=$CUR_PATH/$4 else OutDir=$CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN; fi
-WORK_DIR=$TMP/blast_"$STRAIN"
+WORK_DIR=$TMPDIR/blast_"$STRAIN"
 mkdir $WORK_DIR
 cd $WORK_DIR
 cp $CUR_PATH/$IN_GENOME $GENOME
