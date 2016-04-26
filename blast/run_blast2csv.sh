@@ -49,35 +49,17 @@ elif test "$QUERY_FORMAT" = 'dna'; then
 else exit
 fi
 
-#
-# #-------------------------------------------------------
-# # 		Step 1.		blast queries against themselves
-# #-------------------------------------------------------
-#
+
+#-------------------------------------------------------
+# 		Step 1.		blast queries against genome
+#-------------------------------------------------------
+
 SCRIPT_DIR=$HOME/git_repos/emr_repos/tools/pathogen/blast
-# $SCRIPT_DIR/blast_self.pl $QUERY $SELF_BLAST_TYPE > "$QUERY"_self.csv
-#
-# #-------------------------------------------------------
-# # 		Step 2.		simplify hits table into homolog groups
-# #-------------------------------------------------------
-#
-# $SCRIPT_DIR/blast_parse.pl "$QUERY"_self.csv > "$QUERY"_simplified.csv
-
-#-------------------------------------------------------
-# 		Step 3.		blast queries against genome
-#-------------------------------------------------------
-
 $SCRIPT_DIR/blast2csv.pl $QUERY $BLAST_CSV_TYPE $GENOME 5 > "$OUTNAME"_hits.csv
 
-# #-------------------------------------------------------
-# # 		Step 4.		combine the homolog group table
-# #					 with the blast result table
-# #-------------------------------------------------------
-#
-# paste -d '\t' "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNAME"_homologs.csv
 
 #-------------------------------------------------------
-# 		Step 5.		Cleanup
+# 		Step 2.		Cleanup
 #-------------------------------------------------------
 
 mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
