@@ -57,8 +57,33 @@ for line in ortho_lines:
 # into a fasta file named by the orthogroup into the
 # directory specified at stdin.
 
+
+
+fasta_dict = defaultdict(list)
+header = ""
+seq_list = [""]
+for line in fasta_lines:
+    line = line.rstrip()
+    if re.search(r"^>", line):
+        prev_header = header
+        prev_seq = "".join(seq_list)
+        # print_accession = False
+        # if len(ortho_set) == 0:
+            # continue
+        fasta_dict[prev_header].append(prev_seq)
+        header = line.replace('>', '')
+        seq_list = [""]
+    else:
+        seq_list.append(line)
+
+prev_header = header
+prev_seq = "".join(seq_list)
+fasta_dict[prev_header].append(prev_seq)
+
+
+
     #-----------------------------------------------------
-    # Step 3a - Function A
+    # Step 3b - Function B
     # extract_func
     # Extract fasta sequences that match orthogroup
     # contents
@@ -66,33 +91,33 @@ for line in ortho_lines:
     # Overview:
     #
     #-----------------------------------------------------
-
-def extract_func(group_name):
-    print ("Extracting fasta sequences from orthogroup: " + str(group_name))
-    outlines=[]
-    ortho_set = Set([])
-    i = 0
-    for gene in ortho_dict[group_name]:
-        ortho_set.add(gene)
-    print_accession = False
-    for line in fasta_lines:
-        line = line.rstrip()
-        if re.search(r"^>", line):
-            print_accession = False
-            if len(ortho_set) == 0:
-                continue
-            header = line.replace('>', '')
-            if header in ortho_set:
-                ortho_set.remove(header)
-                outlines.append(line)
-                i += 1
-                print_accession = True
-        elif print_accession == True:
-            outlines.append(line)
-        else:
-            continue
-    print "\tnumber of accessions in this group:\t" + str(i)
-    return(outlines)
+#
+# def extract_func(group_name):
+#     print ("Extracting fasta sequences from orthogroup: " + str(group_name))
+#     outlines=[]
+#     ortho_set = Set([])
+#     i = 0
+#     for gene in ortho_dict[group_name]:
+#         ortho_set.add(gene)
+#     print_accession = False
+#     for line in fasta_lines:
+#         line = line.rstrip()
+#         if re.search(r"^>", line):
+#             print_accession = False
+#             if len(ortho_set) == 0:
+#                 continue
+#             header = line.replace('>', '')
+#             if header in ortho_set:
+#                 ortho_set.remove(header)
+#                 outlines.append(line)
+#                 i += 1
+#                 print_accession = True
+#         elif print_accession == True:
+#             outlines.append(line)
+#         else:
+#             continue
+#
+#     return(outlines)
 
 keys = []
 sorted_keys = []
@@ -102,8 +127,18 @@ keys.sort(key=int)
 ortho_list = []
 for group_name in keys:
     print ("orthogroup" + str(group_name))
-    ortho_fasta = extract_func(group_name)
+    print ("Extracting fasta sequences from orthogroup: " + str(group_name))
+    ortho_fasta = []
+    i = 0
+    for gene in ortho_dict[group_name]:
+        fasta_lines
+        ortho_fasta.append(">" + gene)
+        ortho_fasta.append("".join(fasta_dict[gene]))
+        i += 1
+    # ortho_fasta = extract_func(group_name)
+    print "\tnumber of accessions in this group:\t" + str(i)
     outfile = str(conf.out_dir) + "/orthogroup" + str(group_name) + ".fa"
     with open(outfile, 'w') as o:
-        for line in ortho_fasta:
-            o.write(line + "\n")
+        # for line in ortho_fasta:
+            # o.write(line + "\n")
+        o.write("\n".join(ortho_fasta))
