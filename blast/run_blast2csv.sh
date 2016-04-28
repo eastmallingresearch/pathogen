@@ -3,67 +3,78 @@
 #$ -cwd
 #$ -pe smp 1
 #$ -l virtual_free=0.9G
-#$ -l h=blacklace02.blacklace|blacklace03.blacklace|blacklace04.blacklace|blacklace05.blacklace|blacklace06.blacklace|blacklace07.blacklace|blacklace08.blacklace|blacklace09.blacklace|blacklace10.blacklace
+#$ -l h=blacklace01.blacklace
+##$ -l h=blacklace02.blacklace|blacklace03.blacklace|blacklace04.blacklace|blacklace05.blacklace|blacklace06.blacklace|blacklace07.blacklace|blacklace08.blacklace|blacklace09.blacklace|blacklace10.blacklace
 
 
 # script to run blast homology pipe
-USAGE="run_blast2csv.sh <query.fa> <dna, protein (query_format)> <genome_sequence.fa> <output_directory>"
+USAGE="run_blast2csv.sh <Query.fa> <dna, protein (QueryFormat)> <Genome_sequence.fa> <output_directory>"
 
 
 #-------------------------------------------------------
 # 		Step 0.		Initialise values
 #-------------------------------------------------------
 
-IN_QUERY=$1
-QUERY_FORMAT=$2
-IN_GENOME=$3
-ORGANISM=$(echo $IN_GENOME | rev | cut -d "/" -f4 | rev)
-STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
-QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
-GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
-CUR_PATH=$PWD
-if [ "$4" ]; then OutDir=$CUR_PATH/$4 else OutDir=$CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN; fi
-WORK_DIR=$TMPDIR/blast_"$STRAIN"
-mkdir $WORK_DIR
-cd $WORK_DIR
-cp $CUR_PATH/$IN_GENOME $GENOME
-cp $CUR_PATH/$IN_QUERY $QUERY
-OUTNAME="$STRAIN"_"$QUERY"
+InQuery=$1
+QueryFormat=$2
+InGenome=$3
+Organism=$(echo $InGenome | rev | cut -d "/" -f4 | rev)
+Strain=$(echo $InGenome | rev | cut -d "/" -f3 | rev)
+Query=$(echo $InQuery | rev | cut -d "/" -f1 | rev)
+Genome=$(echo $InGenome | rev | cut -d "/" -f1 | rev)
+CurPath=$PWD
+
+
+
+Outname="$Strain"_"$Query"
+ProgDir=$HOME/git_repos/emr_repos/tools/pathogen/blast
+
+if [ "$4" ]; then
+  OutDir=$CurPath/$4;
+else
+  OutDir=$CurPath/analysis/blast_homology/$Organism/$Strain;
+fi
+WorkDir=$TMPDIR/blast_"$Strain"
+
+
+if test "$QueryFormat" = 'protein'; then
+	BlastType='tblastn'
+elif test "$QueryFormat" = 'dna'; then
+	BlastType='tblastx'
+else
+  exit
+fi
 
 echo "Running blast_pipe.sh"
 echo "Usage = $USAGE"
-echo "Organism is: $ORGANISM"
-echo "Strain is: $STRAIN"
-echo "Query is: $QUERY"
-echo "This is $QUERY_FORMAT data"
-echo "Genome is: $GENOME"
+echo "Organism is: $Organism"
+echo "Strain is: $Strain"
+echo "Query is: $Query"
+echo "This is $QueryFormat data"
+echo "Genome is: $Genome"
 echo "You are running scripts from:"
-echo "$SCRIPT_DIR"
+echo "$ProgDir"
 
-if test "$QUERY_FORMAT" = 'protein'; then
-	SELF_BLAST_TYPE='blastp'
-	BLAST_CSV_TYPE='tblastn'
-elif test "$QUERY_FORMAT" = 'dna'; then
-	SELF_BLAST_TYPE='blastn'
-	BLAST_CSV_TYPE='tblastx'
-else exit
-fi
-
+mkdir -p $WorkDir
+cd $WorkDir
+# ls -lh $CurPath/$InGenome
+# ls -lh $CurPath/$InQuery
+cp $CurPath/$InGenome $Genome
+cp $CurPath/$InQuery $Query
 
 #-------------------------------------------------------
-# 		Step 1.		blast queries against genome
+# 		Step 1.		blast queries against Genome
 #-------------------------------------------------------
 
-SCRIPT_DIR=$HOME/git_repos/emr_repos/tools/pathogen/blast
-$SCRIPT_DIR/blast2csv.pl $QUERY $BLAST_CSV_TYPE $GENOME 5 > "$OUTNAME"_hits.csv
+$ProgDir/blast2csv.pl $Query $BlastType $Genome 5 > "$Outname"_hits.csv
 
 
 #-------------------------------------------------------
 # 		Step 2.		Cleanup
 #-------------------------------------------------------
 
-mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
+mkdir -p $OutDir/.
 
-cp -r $WORK_DIR/"$OUTNAME"_hits.csv $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/.
+cp -r $WorkDir/"$Outname"_hits.csv $OutDir/.
 
-rm -r $WORK_DIR/
+rm -r $WorkDir/
