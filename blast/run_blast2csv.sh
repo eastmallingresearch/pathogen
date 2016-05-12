@@ -3,8 +3,7 @@
 #$ -cwd
 #$ -pe smp 1
 #$ -l virtual_free=0.9G
-#$ -l h=blacklace01.blacklace
-##$ -l h=blacklace02.blacklace|blacklace03.blacklace|blacklace04.blacklace|blacklace05.blacklace|blacklace06.blacklace|blacklace07.blacklace|blacklace08.blacklace|blacklace09.blacklace|blacklace10.blacklace
+#$ -l h=blacklace02.blacklace|blacklace03.blacklace|blacklace04.blacklace|blacklace05.blacklace|blacklace06.blacklace|blacklace07.blacklace|blacklace08.blacklace|blacklace09.blacklace|blacklace10.blacklace
 
 
 # script to run blast homology pipe
