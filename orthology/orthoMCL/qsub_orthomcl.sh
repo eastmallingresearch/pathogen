@@ -91,8 +91,7 @@ mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e 
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName4;"
 mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName5;"
 
-ProgDir=/home/armita/prog/orthomcl/orthomclSoftware-v2.0.9/bin
-$ProgDir/orthomclInstallSchema $Config install_schema.log
+orthomclInstallSchema $Config install_schema.log
 
 
 # ----------------------	Step 3	----------------------
@@ -122,8 +121,8 @@ mv mclInput $MclInput
 mcl $MclInput --abc -I $Inflation -o $MclOutput
 cat $MclOutput | orthomclMclToGroups orthogroup 1 > $OrthoGroups
 #-- f --
-GitDir=~/git_repos/emr_repos/tools/pathogen/orthology/orthoMCL
-$GitDir/orthoMCLgroups2tab.py $CurPath/$GoodProts $OrthoGroups > $OrthoMatrix
+ProgDir=/home/armita/git_repos/emr_repos/tools/pathogen/orthology/orthoMCL
+$ProgDir/orthoMCLgroups2tab.py $CurPath/$GoodProts $OrthoGroups > $OrthoMatrix
 
 
 # ----------------------	Step 4	----------------------
