@@ -18,6 +18,7 @@ import sys,argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--inp_fasta',required=True,type=str,help='.fasta file containing query proteins')
+ap.add_argument('--max_length',required=True,type=int,help='maximum length of a "small" protein')
 ap.add_argument('--threshold',required=True,type=int,help='% threshold above which proteins are considered cysteine rich')
 ap.add_argument('--out_fasta',required=True,type=str,help='output results .fasta file of all proteins')
 
@@ -26,6 +27,7 @@ out_records = []
 i = 0
 
 print "% cysteine content threshold set to:\t" + str(conf.threshold)
+print "maximum length set to:\t" + str(conf.max_length)
 
 for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	seq = record.seq
@@ -33,7 +35,7 @@ for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	cys = (( seq.count('C') / float(seq_len) ) * 100)
 	record.description += "\t--cysteine%=\t"
 	record.description += str("{0:.0f}".format(cys))
-	if seq_len <= 150 and cys >= conf.threshold:
+	if seq_len <= conf.max_length and cys >= conf.threshold:
 		record.description += "\t--SSCP=\tYes\t"
 		i += 1
 	else:
