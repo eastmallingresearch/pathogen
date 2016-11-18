@@ -25,6 +25,8 @@ conf = ap.parse_args()
 out_records = []
 i = 0
 
+print "% cysteine content threshold set to:\t" + str(conf.threshold)
+
 for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	seq = record.seq
 	seq_len = len(record)
