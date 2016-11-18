@@ -33,7 +33,7 @@ for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	record.description += str("{0:.0f}".format(cys))
 	if seq_len <= 150 and cys >= conf.threshold:
 		record.description += "\t--SSCP=\tYes\t"
-		i = ++
+		i += 1
 	else:
 		record.description += "\t--SSCP=\tNo\t"
 	out_records.append(record)
