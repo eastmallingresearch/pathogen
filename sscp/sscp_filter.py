@@ -1,25 +1,27 @@
 #!/usr/bin/env python
 import os
 import sys
+from Bio import SeqIO
+import sys,argparse
 
-input_file = sys.argv[1]
+ap = argparse.ArgumentParser()
+ap.add_argument('--inp_fasta',required=True,type=str,help='.fasta file containing query proteins')
+ap.add_argument('--threshold',required=True,type=int,help='% threshold above which proteins are considered cysteine rich')
+ap.add_argument('--out_fasta',required=True,type=str,help='output results .fasta file of all proteins')
 
-f = open(input_file)
-FileLines=[]
-with open(input_file) as f:
-	for line in f:
-		FileLines.append(line.strip())
-		
-		
-for line in FileLines:	
- 	if line.startswith(">"):
- 		header = line
- 	else:
- 		seq = line
-		seq_len = len(seq)
-  		if seq_len <= 150:
-  			cys = (( seq.count('C') / float(seq_len) ) * 100)
-  			if cys >= float(3):
-  				header += "\t--cysteine%=\t"
-  				header += str("{0:.0f}".format(cys))
-  				print header, "\n", seq
+conf = ap.parse_args()
+out_records = []
+
+for record in SeqIO.parse(conf.inp_fasta, "fasta"):
+	seq = record.seq
+	seq_len = len(record)
+	cys = (( seq.count('C') / float(seq_len) ) * 100)
+	record.description += "\t--cysteine%=\t"
+	record.description += str("{0:.0f}".format(cys))
+	if seq_len <= 150 and cys >= conf.threshold:
+		record.description += "\t--SSCP=\tYes\t"
+	else:
+		record.description += "\t--SSCP=\tNo\t"
+	out_records.append(record)
+
+SeqIO.write(out_records, conf.out_fasta, "fasta")
