@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+
+'''
+sscp_filter.py
+
+This script aids identification of small-secreted cysteine rich proteins.
+Predicted secreted proteins are required as input. From these, those that are
+shorter than 150 aa, and hhave a cysteine contenet above the input value are
+considered to be short and cysteine-rich.
+
+All results are printed in the header of the output fasta file.
+'''
+
 import os
 import sys
 from Bio import SeqIO
@@ -11,6 +23,7 @@ ap.add_argument('--out_fasta',required=True,type=str,help='output results .fasta
 
 conf = ap.parse_args()
 out_records = []
+i = 0
 
 for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	seq = record.seq
@@ -20,8 +33,10 @@ for record in SeqIO.parse(conf.inp_fasta, "fasta"):
 	record.description += str("{0:.0f}".format(cys))
 	if seq_len <= 150 and cys >= conf.threshold:
 		record.description += "\t--SSCP=\tYes\t"
+		i = ++
 	else:
 		record.description += "\t--SSCP=\tNo\t"
 	out_records.append(record)
 
+print "No. short-cysteine rich proteins in input fasta:\t" + str(i)
 SeqIO.write(out_records, conf.out_fasta, "fasta")
