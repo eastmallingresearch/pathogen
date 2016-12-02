@@ -33,6 +33,9 @@ OutDir=$CurPath/analysis/orthology/orthomcl/$IsolateAbrv
 mkdir -p $WorkDir
 cd $WorkDir
 
+# HostIP='149.155.34.104'
+HostIP='192.168.1.100'
+
 Config="$IsolateAbrv"_orthomcl.config
 SimilarGenes="$IsolateAbrv"_similar.txt
 Log_file="$IsolateAbrv"_orthoMCL.log
@@ -81,15 +84,15 @@ sed -i "s/interTaxonMatchView=.*/interTaxonMatchView="$TabName5"/g" $Config
 sed -i "s/pmatch_cutoff=.*/pmatch_cutoff=50/g" $Config
 sed -i "s/evalueExponentCutoff=.*/evalueExponentCutoff=-30/g" $Config
 
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestInterTaxonScore;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BestQueryTaxonScore;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists BetterHit;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists UniqSimSeqsQueryId;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName1;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName2;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName3;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName4;"
-mysql -u armita_orthomcl -parmita_orthomcl -h 149.155.34.104 armita_orthomcl -e "drop table if exists $TabName5;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists BestInterTaxonScore;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists BestQueryTaxonScore;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists BetterHit;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists UniqSimSeqsQueryId;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists $TabName1;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists $TabName2;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists $TabName3;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists $TabName4;"
+mysql -u armita_orthomcl -parmita_orthomcl -h $HostIP armita_orthomcl -e "drop table if exists $TabName5;"
 
 orthomclInstallSchema $Config install_schema.log
 
