@@ -55,7 +55,8 @@ fi
 # 		Step 1.		blast queries against themselves
 #-------------------------------------------------------
 
-SCRIPT_DIR=$HOME/git_repos/emr_repos/tools/pathogen/blast
+# SCRIPT_DIR=$HOME/git_repos/emr_repos/tools/pathogen/blast
+SCRIPT_DIR=/home/armita/git_repos/emr_repos/tools/pathogen/blast
 $SCRIPT_DIR/blast_self.pl $QUERY $SELF_BLAST_TYPE > "$QUERY"_self.csv
 
 #-------------------------------------------------------
