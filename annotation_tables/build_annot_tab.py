@@ -23,28 +23,22 @@ from operator import itemgetter
 ap = argparse.ArgumentParser()
 
 ap.add_argument('--genome',required=True,type=str,help='A fasta file of the assembled contigs')
-ap.add_argument('--FoC_genes_gff',required=True,type=str,help='A gff file of the genes from the FoC')
+ap.add_argument('--genes_gff',required=True,type=str,help='A gff file of the genes from the FoC')
 ap.add_argument('--InterPro',required=True,type=str,help='The Interproscan functional annotation .tsv file')
 ap.add_argument('--Swissprot',required=True,type=str,help='A parsed table of BLAST results against the Swissprot database. Note - must have been parsed with swissprot_parser.py')
 
 conf = ap.parse_args()
 
-
 with open(conf.genome) as f:
     contig_lines = f.readlines()
-
-with open(conf.FoC_genes_gff) as f:
+with open(conf.genes_gff) as f:
     FoC_genes_lines = f.readlines()
-
-
 with open(conf.InterPro) as f:
     InterPro_lines = f.readlines()
-
 with open(conf.Swissprot) as f:
     swissprot_lines = f.readlines()
 
 column_list=[]
-
 
 #-----------------------------------------------------
 # Step 2
@@ -70,7 +64,7 @@ for line in contig_lines:
         seq_lines += line
 
 #-----------------------------------------------------
-# Step 4
+# Step 3
 # Append co-ordinates from the FoC gene gff, showing
 # gene locations.
 # Also identify whether there is 2kb sequence data up
@@ -107,9 +101,8 @@ for line in FoC_genes_lines:
             FoC_genes_dict[gene_id].append("")
 
 
-
 #-----------------------------------------------------
-# Step 12
+# Step 4
 # Build a dictionary of interproscan annotations
 # Annotations first need to be filtered to remove
 # redundancy. This is done by first loading anntoations
@@ -136,7 +129,7 @@ for line in InterPro_lines:
 
 
 #-----------------------------------------------------
-# Step 13
+# Step 5
 # Build a dictionary of Swissprot annotations
 #-----------------------------------------------------
 
@@ -152,7 +145,7 @@ for line in swissprot_lines:
 
 
 #-----------------------------------------------------
-# Step 12
+# Step 6
 # Print final table of information on query, blast
 # results and genes intersecting blast results
 #-----------------------------------------------------
