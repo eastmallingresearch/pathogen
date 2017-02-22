@@ -22,8 +22,8 @@ ap = argparse.ArgumentParser()
 
 ap.add_argument('--new_names',required=True,type=str,help='A tab seperated file showing relation of old and new gene names')
 ap.add_argument('--input_table',required=True,type=str,help='A tab-seperated file containing the old gene names that need to be replaced')
-# ap.add_argument('--ignore_header',required=True,type=str,help='')
-# ap.add_argument('--id_column',required=True,type=str,help='')
+ap.add_argument('--ignore_header',required=False,type=bool, help='Ignore the first line as it contains headers.')
+ap.add_argument('--id_column',required=True,type=int,help='geneIDs are contained in column')
 
 conf = ap.parse_args()
 
@@ -32,6 +32,11 @@ with open(conf.new_names) as f:
 with open(conf.input_table) as f:
     table_lines = f.readlines()
 
+header = False
+if conf.ignore_header:
+    header = conf.ignore_header
+
+ID_col = (conf.id_column) -1
 
 #--------------------------------------------------
 # Step 2
@@ -57,13 +62,13 @@ for line in name_lines:
 
 First = True
 for line in table_lines:
-    if First == True:
+    line = line.rstrip()
+    if header == True and First == True:
         First = False
         print line
         continue
-    line = line.rstrip()
     split_line = line.split()
-    gene_col = split_line[0]
+    gene_col = split_line[ID_col]
     old_id = gene_col.split(".")[0]
     new_id = "".join(gene_id_dict[old_id])
     line = re.sub(old_id, new_id, line)
