@@ -65,11 +65,12 @@ echo "OrthoMatrix = $OrthoMatrix"
 
 
 # ----------------------	Step 2	----------------------
-#    Compy the template orthomcl config
+#    Copy the template orthomcl config
 #    & Edit fields in this file
 #-------------------------------------------------------
 
-cp /home/armita/testing/armita_orthomcl/orthomcl.config $Config
+# cp /home/armita/testing/armita_orthomcl/orthomcl.config $Config
+cp /home/armita/testing/armita_orthomcl/orthomcl_cluster.config $Config
 
 TabName1="$IsolateAbrv"_SimilarSequences
 TabName2="$IsolateAbrv"_Ortholog
