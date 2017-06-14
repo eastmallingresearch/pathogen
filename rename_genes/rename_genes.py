@@ -69,7 +69,10 @@ for line in table_lines:
         continue
     split_line = line.split()
     gene_col = split_line[ID_col]
+    # print gene_col
     old_id = gene_col.split(".")[0]
+    # print old_id
     new_id = "".join(gene_id_dict[old_id])
+    # print new_id
     line = re.sub(old_id, new_id, line)
     print line
