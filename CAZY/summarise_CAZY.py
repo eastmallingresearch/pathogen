@@ -119,9 +119,10 @@ for line in inp_lines:
     if summarise_family == True:
         if kubicek_2014 == True:
             # print family
-            if not kubicek_2014_dict[family]:
-                continue
-            family = kubicek_2014_dict[family]
+            if kubicek_2014_dict[family]:
+                family = kubicek_2014_dict[family]
+            else:
+                family = "other"
         else:
             family = family[0:2]
             family = family.replace("CB", "CBM")
