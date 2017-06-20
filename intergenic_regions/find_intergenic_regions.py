@@ -108,7 +108,7 @@ for contig in contig_list:
         elif strand == '-':
             five_prime_lgth = str(downstream_lgth)
             three_prime_lgth = str(upstream_lgth)
-        print "\t".join([ID, five_prime_lgth, three_prime_lgth])
+        print "\t".join([ID, five_prime_lgth, three_prime_lgth, strand])
 
     # exit()
 
