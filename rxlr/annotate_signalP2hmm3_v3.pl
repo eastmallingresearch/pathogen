@@ -11,7 +11,7 @@ use warnings;
 #      1. remove header and the first "-{70}" line.
 #      2. put "---- (70 characters)" line at the end of the file.
 #
-#	Usage:	just type "./annotate_signalP2hmm.pl" (without quotes) at the 
+#	Usage:	just type "./annotate_signalP2hmm.pl" (without quotes) at the
 #			command prompt and answer questions accordingly.
 #
 #
@@ -97,7 +97,7 @@ while (<FASTA>) {
 	        $seq = "";
 	      	$unique_ID = 0;
 	        $inSequence = 0;
-		} 
+		}
 		if (!$inSequence) {
 			$header = $_;
 			$inSequence = 1;
@@ -148,10 +148,11 @@ for (@results) {
     $thisResult =~ /Signal peptide probability: (\d\.\d\d\d)/;
     $probability = "$1";
     if (($signalPeptide) && ($cleaveSite < 41) && ($cleaveSite > 9) && ($probability >= 0.9)) {
+    # if (($signalPeptide) {
     	if (exists $sequences{$unique_ID}) {
-    		$seq = $sequences{$unique_ID}; 
+    		$seq = $sequences{$unique_ID};
     		$seq =~ s/^(>.*?)\n/$1 \t--HMM_score=\t$probability\t--Signal_peptide_length=\t$cleaveSite\n/gm;
-        	push (@signalPeptides, $seq);        	
+        	push (@signalPeptides, $seq);
         }
         $thisName .= "\tYES\t$probability\t$cleaveSite\n";
         push (@toPrint, $thisName);
@@ -159,11 +160,11 @@ for (@results) {
         $thisName .= "\tNo\t$probability\t$cleaveSite\n";
         push (@toPrint, $thisName);
         if (exists $sequences{$unique_ID}) {
-    		$seq = $sequences{$unique_ID}; 
-        	push (@noPex, $seq);        	
+    		$seq = $sequences{$unique_ID};
+        	push (@noPex, $seq);
         }
-        
-    }           
+
+    }
 }
 print "There are $total results from $seqCount sequences\n";
 
@@ -185,4 +186,3 @@ print OUT @noPex;
 close (OUT);
 
 exit;
-
