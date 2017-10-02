@@ -99,7 +99,8 @@ while (my $seq = $input_obj->next_seq) {
  	foreach (@ao_hits) {
  		my $hit = $_;
  		my $hsp = $hit->hsp('best') or last;
- 		$hit_id = substr $hit->name(), 4;
+ 	# 	$hit_id = substr $hit->name(), 4;
+		$hit_id = substr $hit->name(),
 		$hit_seq = $hsp->seq_str('hit');
  		$hit_lgth = length ($hit_seq);
  		if ($blast_type eq 'tblastx' or $blast_type eq 'blastx') { $hit_lgth = ($hit_lgth * 3); }
