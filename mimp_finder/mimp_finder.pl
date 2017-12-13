@@ -46,10 +46,10 @@ while (<FASTA_FILE>) {
         # one for names and one for aa sequences.
     	    chomp;
     	$thisLine = $_;
-    	
+
 	if ($thisLine =~ /^>/ && $flag==0) {
 		#print "START LINE DETECTED $thisLine \n";
-		#$thisLine .= "\n";	
+		#$thisLine .= "\n";
 		push (@seqNames, $thisLine);
 		$flag=1;
         	}
@@ -62,7 +62,7 @@ while (<FASTA_FILE>) {
 	else {
         	$tempSeq .= "$thisLine";
     	}
-	
+
 }
 #print "PUSHING FINAL LINE\n";
 push (@dnaSeqs,$tempSeq);
@@ -95,7 +95,7 @@ for ($i = 0; $i < $total; $i++) {
     #print "Working on $seqNames[$i] \n";
     $seqName = $seqNames[$i];
     $dnaSeq = $dnaSeqs[$i];
-  
+
 	while ($dnaSeq =~/CAGTGGG..GCAA[TA]AA/g ){
 		my $mimp_pos = pos($dnaSeq) ;
 		print "FOUND MIMP on $seqName at $mimp_pos\n";
@@ -119,7 +119,7 @@ for ($i = 0; $i < $total; $i++) {
       	print_gff($seqName, $mimpStart, $mimpEnd, $strand, $mimpCount);
     }
 
-    
+
 }
 
 print OUT "There are $mimpCount sequences that contain the consensus mimp motif\n";
