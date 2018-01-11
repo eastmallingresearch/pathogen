@@ -10,6 +10,17 @@ import sys,argparse
 from collections import defaultdict
 import re
 
+def atoi(text):
+    return int(text) if text.isdigit() else text
+
+def natural_keys(text):
+    '''
+    alist.sort(key=natural_keys) sorts in human order
+    http://nedbatchelder.com/blog/200712/human_sorting.html
+    (See Toothy's implementation in the comments)
+    '''
+    return [ atoi(c) for c in re.split('(\d+)', text) ]
+
 #-----------------------------------------------------
 # Step 1
 # Import variables & load input files
@@ -123,7 +134,7 @@ keys = []
 sorted_keys = []
 keys = ortho_dict.keys()
 
-keys.sort(key=int)
+keys.sort(key=natural_keys)
 ortho_list = []
 for group_name in keys:
     print ("orthogroup" + str(group_name))
