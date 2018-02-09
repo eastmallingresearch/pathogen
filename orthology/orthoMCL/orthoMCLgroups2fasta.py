@@ -82,7 +82,7 @@ for line in fasta_lines:
         # if len(ortho_set) == 0:
             # continue
         fasta_dict[prev_header].append(prev_seq)
-        header = line.replace('>', '')
+        header = line.replace('>', '').split()[0]
         seq_list = [""]
     else:
         seq_list.append(line)
