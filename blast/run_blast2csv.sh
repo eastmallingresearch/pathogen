@@ -26,7 +26,7 @@ CurPath=$PWD
 
 
 Outname="$Strain"_"$Query"
-ProgDir=$HOME/git_repos/emr_repos/tools/pathogen/blast
+ProgDir=/home/armita/git_repos/emr_repos/tools/pathogen/blast
 
 if [ "$4" ]; then
   OutDir=$CurPath/$4;
