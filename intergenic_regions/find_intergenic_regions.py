@@ -22,7 +22,7 @@ from operator import itemgetter
 ap = argparse.ArgumentParser()
 
 ap.add_argument('--Gff',required=True,type=str,help='Gene models in Gff format')
-ap.add_argument('--keep_break',required=False,type=bool,help='Set if intergenic lengths should be counted for genes flanking a contig break')
+ap.add_argument('--keep_break',required=False,action="store_true",help='Set if intergenic lengths should be counted for genes flanking a contig break')
 
 
 conf = ap.parse_args()
