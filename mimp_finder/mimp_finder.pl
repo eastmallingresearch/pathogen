@@ -87,7 +87,7 @@ my $subSeq;
 my $mimpCount = 0;
 my $i = 0;
 $total = @seqNames;
-
+# print "$total\n";
 
 
 for ($i = 0; $i < $total; $i++) {
@@ -95,7 +95,8 @@ for ($i = 0; $i < $total; $i++) {
     #print "Working on $seqNames[$i] \n";
     $seqName = $seqNames[$i];
     $dnaSeq = $dnaSeqs[$i];
-
+    # print "$i\n";
+# print "$dnaSeq\n";
 	while ($dnaSeq =~/CAGTGGG..GCAA[TA]AA/g ){
 		my $mimp_pos = pos($dnaSeq) ;
 		print "FOUND MIMP on $seqName at $mimp_pos\n";
