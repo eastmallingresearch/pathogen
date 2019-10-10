@@ -70,7 +70,8 @@ echo "OrthoMatrix = $OrthoMatrix"
 #-------------------------------------------------------
 
 # cp /home/armita/testing/armita_orthomcl/orthomcl.config $Config
-cp /home/armita/testing/armita_orthomcl/orthomcl_cluster.config $Config
+# cp /home/armita/testing/armita_orthomcl/orthomcl_cluster.config $Config
+cp /projects/oldhome/armita/testing/armita_orthomcl/orthomcl_cluster.config $Config
 
 TabName1="$IsolateAbrv"_SimilarSequences
 TabName2="$IsolateAbrv"_Ortholog
