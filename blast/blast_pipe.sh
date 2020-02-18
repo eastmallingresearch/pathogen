@@ -22,7 +22,7 @@ STRAIN=$(echo $IN_GENOME | rev | cut -d "/" -f3 | rev)
 QUERY=$(echo $IN_QUERY | rev | cut -d "/" -f1 | rev)
 GENOME=$(echo $IN_GENOME | rev | cut -d "/" -f1 | rev)
 CUR_PATH=$PWD
-if [ "$4" ]; then OutDir=$CUR_PATH/$4 else OutDir=$CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN; fi
+if [ "$4" ]; then OutDir=$CUR_PATH/$4; else OutDir=$CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN; fi
 WORK_DIR=$TMPDIR/blast_"$STRAIN"
 mkdir $WORK_DIR
 cd $WORK_DIR
@@ -82,8 +82,8 @@ paste -d '\t' "$QUERY"_simplified.csv <(cut -f 2- "$OUTNAME"_hits.csv) > "$OUTNA
 # 		Step 5.		Cleanup
 #-------------------------------------------------------
 
-mkdir -p $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/
+mkdir -p $OutDir
 
-cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $CUR_PATH/analysis/blast_homology/$ORGANISM/$STRAIN/.
+cp -r $WORK_DIR/"$OUTNAME"_homologs.csv $OutDir/.
 
 rm -r $WORK_DIR/
